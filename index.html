@@ -1,24 +1,448 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <title>我的 GitHub Pages 网站</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            text-align: center;
-        }
-        h1 {
-            color: #0366d6;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="zilouju — 探索 AI 与开源的边界">
+  <title>zilouju · AI & Open Source</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --hf-yellow: #ffcc33;
+      --hf-yellow-hover: #f5c400;
+      --accent: #4d6bfe;
+      --accent-soft: rgba(77, 107, 254, 0.12);
+      --bg: #fafafa;
+      --surface: #ffffff;
+      --text: #1a1a2e;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --hero-bg: #0b0f1a;
+      --hero-text: #f4f4f5;
+      --radius-lg: 16px;
+      --shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.04);
+      --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.1);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 56px;
+      background: rgba(11, 15, 26, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-weight: 700; font-size: 1rem; color: var(--hero-text);
+    }
+    .nav-brand img { width: 28px; height: 28px; border-radius: 50%; }
+    .nav-links { display: flex; align-items: center; gap: 1.5rem; list-style: none; }
+    .nav-links a { font-size: 0.875rem; color: rgba(244, 244, 245, 0.75); transition: color 0.2s; }
+    .nav-links a:hover { color: var(--hero-text); }
+    .nav-cta {
+      padding: 0.4rem 1rem; background: var(--hf-yellow); color: #1a1a2e !important;
+      border-radius: 999px; font-weight: 600; font-size: 0.8125rem;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .nav-cta:hover { background: var(--hf-yellow-hover); transform: translateY(-1px); }
+    .hero {
+      position: relative; min-height: 88vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 7rem 1.5rem 5rem;
+      background: var(--hero-bg); overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(77, 107, 254, 0.25) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 80% 100%, rgba(255, 204, 51, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .hero-grid {
+      display: block;
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 20%, transparent 75%);
+      pointer-events: none;
+    }
+    .hero-content { position: relative; max-width: 720px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.35rem 0.9rem; margin-bottom: 1.5rem;
+      font-size: 0.8125rem; color: rgba(244, 244, 245, 0.85);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 999px;
+    }
+    .hero-badge .dot {
+      width: 6px; height: 6px; background: #22c55e; border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .hero h1 {
+      font-size: clamp(2.25rem, 6vw, 3.75rem); font-weight: 700;
+      letter-spacing: -0.03em; line-height: 1.15;
+      color: var(--hero-text); margin-bottom: 1.25rem;
+    }
+    .hero h1 .gradient {
+      background: linear-gradient(135deg, #a5b4fc 0%, var(--hf-yellow) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-sub {
+      font-size: clamp(1rem, 2.5vw, 1.2rem); color: rgba(244, 244, 245, 0.65);
+      max-width: 520px; margin: 0 auto 2.5rem; line-height: 1.7;
+    }
+    .search-wrap { width: min(560px, 100%); margin: 0 auto 2rem; }
+    .search-bar {
+      display: flex; align-items: center; width: 100%; padding: 0.15rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 999px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-bar:focus-within {
+      border-color: rgba(255, 204, 51, 0.5);
+      box-shadow: 0 0 0 3px rgba(255, 204, 51, 0.15);
+    }
+    .search-bar input {
+      flex: 1; padding: 0.85rem 1.25rem; background: transparent; border: none;
+      outline: none; font-size: 0.9375rem; color: var(--hero-text); font-family: inherit;
+    }
+    .search-bar input::placeholder { color: rgba(244, 244, 245, 0.4); }
+    .search-bar button {
+      padding: 0.65rem 1.25rem; margin-right: 0.15rem;
+      background: var(--hf-yellow); color: #1a1a2e; border: none; border-radius: 999px;
+      font-weight: 600; font-size: 0.875rem; cursor: pointer; font-family: inherit;
+      transition: background 0.2s; white-space: nowrap;
+    }
+    .search-bar button:hover { background: var(--hf-yellow-hover); }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.7rem 1.35rem; border-radius: 999px;
+      font-size: 0.875rem; font-weight: 500; transition: all 0.2s;
+    }
+    .btn-ghost {
+      color: var(--hero-text); background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .btn-ghost:hover { background: rgba(255, 255, 255, 0.14); border-color: rgba(255, 255, 255, 0.25); }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: #3d5aed; transform: translateY(-1px); }
+    main { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+    .section { padding: 4.5rem 0; }
+    .section-header {
+      display: flex; align-items: baseline; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem; margin-bottom: 1.75rem;
+    }
+    .section-header h2 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; }
+    .section-header .tabs {
+      display: flex; gap: 0.25rem; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 8px; padding: 3px;
+    }
+    .tab {
+      padding: 0.35rem 0.85rem; font-size: 0.8125rem; font-weight: 500;
+      color: var(--text-muted); border-radius: 6px; border: none;
+      background: transparent; font-family: inherit;
+    }
+    .tab.active { background: var(--text); color: #fff; }
+    .view-all { font-size: 0.875rem; color: var(--accent); font-weight: 500; }
+    .view-all:hover { text-decoration: underline; }
+    .card-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem;
+    }
+    .repo-card {
+      display: flex; flex-direction: column; padding: 1.25rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); box-shadow: var(--shadow);
+      transition: box-shadow 0.25s, border-color 0.25s, transform 0.25s;
+    }
+    .repo-card:hover {
+      box-shadow: var(--shadow-hover); border-color: #d1d5db; transform: translateY(-2px);
+    }
+    .repo-card-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 0.75rem; margin-bottom: 0.6rem;
+    }
+    .repo-name { font-weight: 600; font-size: 1rem; word-break: break-all; }
+    .repo-type {
+      flex-shrink: 0; padding: 0.2rem 0.55rem; font-size: 0.6875rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.04em;
+      background: var(--accent-soft); color: var(--accent); border-radius: 4px;
+    }
+    .repo-desc {
+      flex: 1; font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1rem;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .repo-meta {
+      display: flex; align-items: center; flex-wrap: wrap; gap: 0.85rem;
+      font-size: 0.8125rem; color: var(--text-muted);
+      padding-top: 0.85rem; border-top: 1px solid var(--border);
+    }
+    .repo-meta span { display: inline-flex; align-items: center; gap: 0.3rem; }
+    .lang-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .skeleton {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+      background-size: 200% 100%; animation: shimmer 1.2s infinite; border-radius: 6px;
+    }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    .skeleton-card { display: block; height: 160px; border-radius: var(--radius-lg); }
+    .features {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;
+    }
+    .feature-card {
+      padding: 1.75rem; background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); transition: box-shadow 0.25s, transform 0.25s;
+    }
+    .feature-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+    .feature-icon {
+      width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+      font-size: 1.35rem; background: var(--accent-soft); border-radius: 10px; margin-bottom: 1rem;
+    }
+    .feature-card h3 { font-size: 1.0625rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .feature-card p { font-size: 0.875rem; color: var(--text-muted); line-height: 1.65; }
+    .feature-link {
+      display: inline-flex; align-items: center; gap: 0.25rem; margin-top: 1rem;
+      font-size: 0.875rem; font-weight: 500; color: var(--accent);
+    }
+    .feature-link:hover { text-decoration: underline; }
+    .stats-bar {
+      list-style: none;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem;
+      padding: 2rem; background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); margin-top: -2rem;
+      position: relative; z-index: 2; box-shadow: var(--shadow);
+    }
+    .stat-item { text-align: center; }
+    .stat-value { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.02em; }
+    .stat-label { font-size: 0.8125rem; color: var(--text-muted); margin-top: 0.15rem; }
+    footer {
+      margin-top: 2rem; padding: 2.5rem 1.5rem; text-align: center;
+      font-size: 0.8125rem; color: var(--text-muted); border-top: 1px solid var(--border);
+    }
+    footer a { color: var(--accent); }
+    footer a:hover { text-decoration: underline; }
+    @media (max-width: 640px) {
+      .nav { padding: 0 1rem; }
+      .nav-links li:not(:last-child) { display: none; }
+      .section-header .tabs { display: none; }
+      .stats-bar { margin-top: -1rem; }
+    }
+  </style>
 </head>
 <body>
-    <h1>🎉 Hello, GitHub Pages!</h1>
-    <p>这是我的第一个 GitHub Pages 网站</p>
-    <p>部署成功！✅</p>
+  <nav class="nav">
+    <a href="#" class="nav-brand">
+      <img id="nav-avatar" src="https://avatars.githubusercontent.com/u/285595508?v=4" alt="zilouju" width="28" height="28">
+      zilouju
+    </a>
+    <ul class="nav-links">
+      <li><a href="#repos">项目</a></li>
+      <li><a href="#about">关于</a></li>
+      <li><a href="https://github.com/zilouju" target="_blank" rel="noopener" class="nav-cta">GitHub</a></li>
+    </ul>
+  </nav>
+
+  <header class="hero">
+    <span class="hero-grid" aria-hidden="true"></span>
+    <section class="hero-content">
+      <p class="hero-badge">
+        <span class="dot"></span>
+        GitHub Pages 已部署
+      </p>
+      <h1>探索 <span class="gradient">AI 与开源</span> 的边界</h1>
+      <p class="hero-sub">构建、分享、协作 — 在这里记录机器学习与工程实践，连接社区与未来。</p>
+      <form class="search-wrap" id="search-form" role="search">
+        <label class="search-bar">
+          <input type="search" id="search-input" placeholder="搜索 GitHub 仓库…" autocomplete="off" aria-label="搜索仓库">
+          <button type="submit">浏览</button>
+        </label>
+      </form>
+      <p class="hero-actions">
+        <a href="https://github.com/zilouju?tab=repositories" target="_blank" rel="noopener" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          全部仓库
+        </a>
+        <a href="#repos" class="btn btn-ghost">查看项目 ↓</a>
+      </p>
+    </section>
+  </header>
+
+  <main>
+    <section class="section" style="padding-top: 3rem;">
+      <ul class="stats-bar">
+        <li class="stat-item">
+          <p class="stat-value" id="stat-repos">—</p>
+          <p class="stat-label">公开仓库</p>
+        </li>
+        <li class="stat-item">
+          <p class="stat-value" id="stat-stars">—</p>
+          <p class="stat-label">Stars</p>
+        </li>
+        <li class="stat-item">
+          <p class="stat-value" id="stat-followers">—</p>
+          <p class="stat-label">Followers</p>
+        </li>
+        <li class="stat-item">
+          <p class="stat-value">∞</p>
+          <p class="stat-label">探索热情</p>
+        </li>
+      </ul>
+    </section>
+
+    <section class="section" id="repos">
+      <header class="section-header">
+        <h2>最近更新</h2>
+        <nav class="tabs" role="tablist" aria-label="内容类型">
+          <button class="tab active" type="button">Repositories</button>
+          <button class="tab" type="button" disabled style="opacity:0.4;cursor:not-allowed">Models</button>
+          <button class="tab" type="button" disabled style="opacity:0.4;cursor:not-allowed">Spaces</button>
+        </nav>
+        <a href="https://github.com/zilouju?tab=repositories" target="_blank" rel="noopener" class="view-all">查看全部 →</a>
+      </header>
+      <section class="card-grid" id="repo-grid">
+        <span class="skeleton skeleton-card"></span>
+        <span class="skeleton skeleton-card"></span>
+        <span class="skeleton skeleton-card"></span>
+      </section>
+    </section>
+
+    <section class="section" id="about">
+      <header class="section-header">
+        <h2>能力方向</h2>
+      </header>
+      <section class="features">
+        <article class="feature-card">
+          <p class="feature-icon">🤗</p>
+          <h3>机器学习</h3>
+          <p>模型训练、微调与评估，关注 NLP、多模态与开源生态（Transformers、Datasets 等）。</p>
+          <a href="https://huggingface.co" target="_blank" rel="noopener" class="feature-link">Hugging Face →</a>
+        </article>
+        <article class="feature-card">
+          <p class="feature-icon">⚡</p>
+          <h3>工程实践</h3>
+          <p>端到端 pipeline、API 集成与部署，追求可复现、可维护的代码与文档。</p>
+          <a href="https://github.com/zilouju" target="_blank" rel="noopener" class="feature-link">GitHub 主页 →</a>
+        </article>
+        <article class="feature-card">
+          <p class="feature-icon">🔬</p>
+          <h3>前沿探索</h3>
+          <p>跟踪大模型推理、Agent 与开源 LLM 进展，在实践中验证与迭代想法。</p>
+          <a href="https://www.deepseek.com" target="_blank" rel="noopener" class="feature-link">DeepSeek →</a>
+        </article>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    <p>© <span id="year"></span> <a href="https://github.com/zilouju">zilouju</a> · 基于 GitHub Pages 构建</p>
+  </footer>
+
+  <script>
+    const GITHUB_USER = 'zilouju';
+    const LANG_COLORS = {
+      JavaScript: '#f1e05a', TypeScript: '#3178c6', Python: '#3572A5',
+      HTML: '#e34c26', CSS: '#563d7c', Rust: '#dea584', Go: '#00ADD8',
+      Java: '#b07219', 'Jupyter Notebook': '#DA5B0B', Shell: '#89e051',
+    };
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    document.getElementById('search-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const q = document.getElementById('search-input').value.trim();
+      const url = q
+        ? `https://github.com/search?q=${encodeURIComponent(q + ' user:' + GITHUB_USER)}&type=repositories`
+        : `https://github.com/${GITHUB_USER}?tab=repositories`;
+      window.open(url, '_blank', 'noopener');
+    });
+
+    function formatRelativeDate(iso) {
+      const diff = Date.now() - new Date(iso).getTime();
+      const days = Math.floor(diff / 86400000);
+      if (days < 1) return '今天';
+      if (days === 1) return '昨天';
+      if (days < 30) return `${days} 天前`;
+      if (days < 365) return `${Math.floor(days / 30)} 个月前`;
+      return `${Math.floor(days / 365)} 年前`;
+    }
+
+    function escapeHtml(str) {
+      const el = document.createElement('span');
+      el.textContent = str;
+      return el.innerHTML;
+    }
+
+    function renderRepoCard(repo) {
+      const lang = repo.language || '';
+      const color = LANG_COLORS[lang] || '#8b8b8b';
+      const desc = repo.description || '暂无描述 — 欢迎探索代码';
+      return `<a href="${repo.html_url}" target="_blank" rel="noopener" class="repo-card">
+          <header class="repo-card-header">
+            <span class="repo-name">${escapeHtml(repo.name)}</span>
+            <span class="repo-type">${repo.fork ? 'Fork' : 'Repo'}</span>
+          </header>
+          <p class="repo-desc">${escapeHtml(desc)}</p>
+          <footer class="repo-meta">
+            ${lang ? `<span><span class="lang-dot" style="background:${color}"></span>${escapeHtml(lang)}</span>` : ''}
+            <span>⭐ ${repo.stargazers_count}</span>
+            <span>更新于 ${formatRelativeDate(repo.pushed_at)}</span>
+          </footer>
+        </a>`;
+    }
+
+    async function loadGitHubData() {
+      const grid = document.getElementById('repo-grid');
+      try {
+        const [userRes, reposRes] = await Promise.all([
+          fetch(`https://api.github.com/users/${GITHUB_USER}`),
+          fetch(`https://api.github.com/users/${GITHUB_USER}/repos?sort=updated&per_page=12`),
+        ]);
+
+        if (!userRes.ok || !reposRes.ok) throw new Error('API error');
+
+        const user = await userRes.json();
+        const repos = await reposRes.json();
+
+        document.getElementById('stat-repos').textContent = user.public_repos;
+        document.getElementById('stat-followers').textContent = user.followers;
+        document.getElementById('stat-stars').textContent = repos.reduce((s, r) => s + r.stargazers_count, 0);
+
+        if (user.avatar_url) {
+          document.getElementById('nav-avatar').src = user.avatar_url;
+        }
+
+        if (repos.length === 0) {
+          grid.innerHTML = `<article class="repo-card" style="grid-column:1/-1;text-align:center">
+              <p class="repo-desc" style="margin:0">还没有公开仓库，去 GitHub 创建第一个项目吧。</p>
+              <a href="https://github.com/new" target="_blank" rel="noopener" class="feature-link" style="justify-content:center;margin-top:1rem">创建仓库 →</a>
+            </article>`;
+          return;
+        }
+
+        grid.innerHTML = repos.map(renderRepoCard).join('');
+      } catch {
+        grid.innerHTML = `<article class="repo-card" style="grid-column:1/-1">
+            <p class="repo-desc">无法加载仓库列表，请直接访问 GitHub。</p>
+            <a href="https://github.com/${GITHUB_USER}" target="_blank" rel="noopener" class="feature-link">前往 GitHub →</a>
+          </article>`;
+      }
+    }
+
+    loadGitHubData();
+  </script>
 </body>
 </html>
