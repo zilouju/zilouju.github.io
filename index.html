@@ -489,6 +489,8 @@
       editingComment: null,
       loading: false,
       archiveLoading: false,
+      localVersion: 0,
+      persistQueue: Promise.resolve(),
     };
 
     /* ── DOM ── */
@@ -883,11 +885,40 @@
       updateFeedCount();
     }
 
+    async function postsFromSnapshot(snapshot) {
+      if (snapshot.archive !== null) {
+        return sortPosts([...snapshot.recent, ...snapshot.archive]);
+      }
+      if (snapshot.recent.length < CONFIG.recentLimit) {
+        return sortPosts(snapshot.recent);
+      }
+      const archive = sortPosts(normalizePosts(await readFileFresh(CONFIG.archiveFile)));
+      return sortPosts([...snapshot.recent, ...archive]);
+    }
+
+    function applyOptimisticSplit(recent, archive, keepArchiveUnloaded) {
+      state.recent = sortPosts(recent);
+      if (!keepArchiveUnloaded) state.archive = sortPosts(archive);
+    }
+
     async function persistPostFiles(normRecent, normArchive, archiveChanged) {
       await writeFile(CONFIG.recentFile, normRecent);
       if (normArchive !== undefined && archiveChanged) {
         await writeFile(CONFIG.archiveFile, normArchive);
       }
+    }
+
+    function enqueuePersist(task, snapshot, version, successMessage) {
+      state.persistQueue = state.persistQueue
+        .then(task)
+        .then(() => toast(successMessage))
+        .catch((err) => {
+          if (state.localVersion === version) {
+            restorePostsState(snapshot);
+          }
+          toast(`同步失败${state.localVersion === version ? '，已回滚' : ''}：${err.message}`);
+        });
+      return state.persistQueue;
     }
 
     async function saveAll(recent, archive) {
@@ -942,23 +973,26 @@
         updatedAt: new Date().toISOString(),
         comments: [],
       };
-      const all = [post, ...(await getAllPostsForWrite())];
-      const { recent, archive } = splitRecentArchive(all);
+      const snapshot = snapshotPostsState();
+      const optimisticAll = [post, ...getAllPosts()];
+      const { recent, archive } = splitRecentArchive(optimisticAll);
       const normRecent = normalizePosts(recent);
       const normArchive = normalizePosts(archive);
-      const archiveChanged = !postsEqual(normArchive, state.archive);
-      const snapshot = snapshotPostsState();
+      const keepArchiveUnloaded = snapshot.archive === null;
+      const version = ++state.localVersion;
       const displayCount = state.displayed.length + 1;
-      applyPostsToState(normRecent, normArchive);
+      applyOptimisticSplit(normRecent, normArchive, keepArchiveUnloaded);
       reloadViewFromState(displayCount);
       toast('发布成功，正在同步…');
 
-      persistPostFiles(normRecent, normArchive, archiveChanged)
-        .then(() => toast('已同步到 GitHub ☀️'))
-        .catch((err) => {
-          restorePostsState(snapshot);
-          toast(`同步失败，已回滚：${err.message}`);
-        });
+      enqueuePersist(async () => {
+        const basePosts = await postsFromSnapshot(snapshot);
+        const fullSplit = splitRecentArchive([post, ...basePosts]);
+        const fullRecent = normalizePosts(fullSplit.recent);
+        const fullArchive = normalizePosts(fullSplit.archive);
+        const archiveChanged = !postsEqual(fullArchive, snapshot.archive);
+        await persistPostFiles(fullRecent, fullArchive, archiveChanged);
+      }, snapshot, version, '已同步到 GitHub ☀️');
     }
 
     async function updatePost(id, content) {
@@ -972,23 +1006,26 @@
 
     async function deletePost(id) {
       if (!confirm('确定删除这条动态？评论也会一并删除。')) return;
-      const all = (await getAllPostsForWrite()).filter(p => p.id !== id);
-      const { recent, archive } = splitRecentArchive(all);
+      const snapshot = snapshotPostsState();
+      const optimisticAll = getAllPosts().filter(p => p.id !== id);
+      const { recent, archive } = splitRecentArchive(optimisticAll);
       const normRecent = normalizePosts(recent);
       const normArchive = normalizePosts(archive);
-      const archiveChanged = !postsEqual(normArchive, state.archive);
-      const snapshot = snapshotPostsState();
+      const keepArchiveUnloaded = snapshot.archive === null;
+      const version = ++state.localVersion;
       const displayCount = state.displayed.filter(p => p.id !== id).length;
-      applyPostsToState(normRecent, normArchive);
+      applyOptimisticSplit(normRecent, normArchive, keepArchiveUnloaded);
       reloadViewFromState(displayCount);
       toast('已删除，正在同步…');
 
-      persistPostFiles(normRecent, normArchive, archiveChanged)
-        .then(() => toast('已同步到 GitHub'))
-        .catch((err) => {
-          restorePostsState(snapshot);
-          toast(`同步失败，已回滚：${err.message}`);
-        });
+      enqueuePersist(async () => {
+        const basePosts = await postsFromSnapshot(snapshot);
+        const fullSplit = splitRecentArchive(basePosts.filter(p => p.id !== id));
+        const fullRecent = normalizePosts(fullSplit.recent);
+        const fullArchive = normalizePosts(fullSplit.archive);
+        const archiveChanged = !postsEqual(fullArchive, snapshot.archive);
+        await persistPostFiles(fullRecent, fullArchive, archiveChanged);
+      }, snapshot, version, '已同步到 GitHub');
     }
 
     /* ── CRUD: Comments ── */
