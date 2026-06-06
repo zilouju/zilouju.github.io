@@ -533,6 +533,7 @@
       editingComment: null,
       loading: false,
       archiveLoading: false,
+      operationActive: false,
       operationTimer: null,
       operationProgress: 0,
     };
@@ -578,6 +579,8 @@
 
     function startOperation(label) {
       clearInterval(state.operationTimer);
+      state.operationActive = true;
+      updateComposeState();
       operationProgress.hidden = false;
       setOperationProgress(8, label);
       state.operationTimer = setInterval(() => {
@@ -593,9 +596,12 @@
       setTimeout(() => {
         if (!state.operationTimer) operationProgress.hidden = true;
       }, 650);
+      state.operationActive = false;
+      updateComposeState();
     }
 
     async function withOperationProgress(label, successLabel, task) {
+      if (state.operationActive) throw new Error('请等待当前操作完成');
       startOperation(label);
       try {
         const result = await task();
@@ -604,6 +610,8 @@
       } catch (err) {
         clearInterval(state.operationTimer);
         state.operationTimer = null;
+        state.operationActive = false;
+        updateComposeState();
         operationProgress.hidden = true;
         throw err;
       }
@@ -676,7 +684,7 @@
 
     function updateComposeState() {
       $('char-count').textContent = composeInput.value.length;
-      btnPost.disabled = !composeInput.value.trim() || state.loading;
+      btnPost.disabled = !composeInput.value.trim() || state.loading || state.operationActive;
     }
 
     function saveComposeDraft() {
@@ -1247,6 +1255,11 @@
       if (!canWrite() && !['toggle-comments'].includes(action)) {
         toast('请先配置 GitHub Token');
         $('settings-modal').classList.add('open');
+        return;
+      }
+
+      if (state.operationActive && !['toggle-comments', 'cancel-edit'].includes(action)) {
+        toast('请等待当前操作完成');
         return;
       }
 
