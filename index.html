@@ -413,6 +413,7 @@
       <div class="logo">
         <span class="logo-icon">☀️</span>
         <span>夏日小微博</span>
+        <span style="font-size:0.65rem;font-weight:500;color:var(--text-muted);margin-left:0.25rem">v4</span>
       </div>
       <div class="header-actions">
         <button class="icon-btn" id="btn-refresh" title="刷新" type="button">🔄</button>
@@ -538,6 +539,28 @@
       return el.innerHTML;
     }
 
+    /** 修复 UTF-8 被误读为 Latin-1 的历史乱码（仅影响中文等多字节字符） */
+    function fixMojibake(str) {
+      if (!str || /^[\x00-\x7F]*$/.test(str)) return str;
+      try {
+        const bytes = Uint8Array.from(str, (c) => c.charCodeAt(0) & 0xff);
+        const fixed = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+        if (/[\u4e00-\u9fff]/.test(fixed)) return fixed;
+      } catch { /* 非乱码，保持原样 */ }
+      return str;
+    }
+
+    function normalizePosts(posts) {
+      return posts.map((p) => ({
+        ...p,
+        content: fixMojibake(p.content),
+        comments: (p.comments || []).map((c) => ({
+          ...c,
+          content: fixMojibake(c.content),
+        })),
+      }));
+    }
+
     function updateStatus() {
       if (canWrite()) {
         statusBar.className = 'status-bar ready';
@@ -569,14 +592,28 @@
     async function fetchJsonLocal(path) {
       const res = await fetch(`./${path}?t=${Date.now()}`);
       if (!res.ok) throw new Error(`无法读取 ${path}`);
-      return res.json();
+      const text = new TextDecoder('utf-8').decode(await res.arrayBuffer());
+      return JSON.parse(text);
+    }
+
+    async function prefetchFileSha(path) {
+      const token = getToken();
+      if (!token) return;
+      const res = await fetch(
+        `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${path}`,
+        { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' } }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        state.fileMeta[path] = { sha: data.sha };
+      }
     }
 
     async function fetchJsonGitHub(path) {
       const token = getToken();
       const res = await fetch(
         `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${path}`,
-        { headers: token ? { Authorization: `Bearer ${token}` } : {} }
+        { headers: token ? { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' } : {} }
       );
       if (!res.ok) throw new Error(`GitHub API: ${res.status}`);
       const data = await res.json();
@@ -584,10 +621,20 @@
       return JSON.parse(decodeBase64Utf8(data.content));
     }
 
+    /** 读取：静态 JSON 优先（UTF-8 可靠）；有 Token 时并行预取 sha 供写入 */
     async function readFile(path) {
+      const [data] = await Promise.all([
+        fetchJsonLocal(path),
+        canWrite() ? prefetchFileSha(path) : Promise.resolve(),
+      ]);
+      return data;
+    }
+
+    /** 有 Token 时从 API 拉最新数据（发帖保存后用，避免 CDN 缓存滞后） */
+    async function readFileFresh(path) {
       if (canWrite()) {
         try { return await fetchJsonGitHub(path); }
-        catch { /* fallback to static */ }
+        catch { /* fallback */ }
       }
       return fetchJsonLocal(path);
     }
@@ -597,7 +644,7 @@
       if (!token) throw new Error('请先配置 GitHub Token');
 
       if (!state.fileMeta[path]?.sha) {
-        try { await fetchJsonGitHub(path); } catch { /* new file */ }
+        await prefetchFileSha(path);
       }
 
       const body = {
@@ -634,7 +681,7 @@
 
     /* ── Load ── */
     async function loadRecent() {
-      state.recent = sortPosts(await readFile(CONFIG.recentFile));
+      state.recent = sortPosts(normalizePosts(await readFile(CONFIG.recentFile)));
     }
 
     async function loadArchive(silent = false) {
@@ -644,7 +691,7 @@
         updateLoadMoreUI();
       }
       try {
-        state.archive = sortPosts(await readFile(CONFIG.archiveFile));
+        state.archive = sortPosts(normalizePosts(await readFile(CONFIG.archiveFile)));
       } catch {
         state.archive = [];
       }
@@ -771,13 +818,17 @@
     }
 
     /* ── Persist helpers ── */
+    function applyPostsToState(recent, archive) {
+      state.recent = sortPosts(recent);
+      if (archive !== undefined) state.archive = sortPosts(archive);
+    }
+
     async function saveAll(recent, archive) {
       await writeFile(CONFIG.recentFile, recent);
       if (archive !== undefined) {
         await writeFile(CONFIG.archiveFile, archive);
       }
-      state.recent = sortPosts(recent);
-      if (archive !== undefined) state.archive = sortPosts(archive);
+      applyPostsToState(recent, archive);
     }
 
     function findPost(id) {
@@ -825,13 +876,10 @@
         comments: [],
       };
       const all = [post, ...(await getAllPostsForWrite())];
-      await persistPosts(all);
+      const { recent, archive } = splitRecentArchive(all);
+      await saveAll(recent, archive);
       const displayCount = state.displayed.length + 1;
-      await loadRecent();
-      if (state.archive !== null) {
-        state.archive = sortPosts(await readFile(CONFIG.archiveFile));
-      }
-      state.displayed = getAllPosts().slice(0, displayCount);
+      state.displayed = all.slice(0, displayCount);
       state.recentShown = Math.min(displayCount, state.recent.length);
       state.archiveShown = Math.max(0, displayCount - state.recent.length);
       renderFeed();
@@ -852,15 +900,10 @@
     async function deletePost(id) {
       if (!confirm('确定删除这条动态？评论也会一并删除。')) return;
       const all = (await getAllPostsForWrite()).filter(p => p.id !== id);
-      await persistPosts(all);
+      const { recent, archive } = splitRecentArchive(all);
+      await saveAll(recent, archive);
       state.displayed = state.displayed.filter(p => p.id !== id);
-      await loadRecent();
-      if (state.archive !== null) {
-        state.archive = sortPosts(await readFile(CONFIG.archiveFile));
-      }
-      renderFeed();
-      updateLoadMoreUI();
-      updateFeedCount();
+      reloadViewFromState(state.displayed.length);
       toast('已删除');
     }
 
@@ -912,12 +955,7 @@
       toast('评论已删除');
     }
 
-    async function reloadAndKeepView() {
-      const count = state.displayed.length;
-      await loadRecent();
-      if (state.archive !== null) {
-        state.archive = sortPosts(await readFile(CONFIG.archiveFile));
-      }
+    function reloadViewFromState(count) {
       const all = getAllPosts();
       state.displayed = all.slice(0, count);
       state.recentShown = Math.min(count, state.recent.length);
@@ -925,6 +963,11 @@
       renderFeed();
       updateLoadMoreUI();
       updateFeedCount();
+    }
+
+    async function reloadAndKeepView() {
+      const count = state.displayed.length;
+      reloadViewFromState(count);
     }
 
     /* ── Render ── */
@@ -1175,6 +1218,7 @@
 
     $('btn-refresh').addEventListener('click', async () => {
       state.archive = null;
+      state.fileMeta = {};
       state.expandedComments.clear();
       await init();
       toast('已刷新');
