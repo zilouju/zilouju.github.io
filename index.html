@@ -413,7 +413,7 @@
       <div class="logo">
         <span class="logo-icon">☀️</span>
         <span>夏日小微博</span>
-        <span style="font-size:0.65rem;font-weight:500;color:var(--text-muted);margin-left:0.25rem">v4</span>
+        <span style="font-size:0.65rem;font-weight:500;color:var(--text-muted);margin-left:0.25rem">v5</span>
       </div>
       <div class="header-actions">
         <button class="icon-btn" id="btn-refresh" title="刷新" type="button">🔄</button>
@@ -639,40 +639,59 @@
       return fetchJsonLocal(path);
     }
 
-    async function writeFile(path, content) {
+    function isShaConflict(message, status) {
+      const msg = message || '';
+      return status === 409
+        || /does not match/i.test(msg)
+        || /sha/i.test(msg);
+    }
+
+    async function writeFile(path, content, maxRetry = 3) {
       const token = getToken();
       if (!token) throw new Error('请先配置 GitHub Token');
 
-      if (!state.fileMeta[path]?.sha) {
+      const payload = encodeBase64Utf8(JSON.stringify(content, null, 2));
+      let lastError = '保存失败';
+
+      for (let attempt = 0; attempt < maxRetry; attempt++) {
+        delete state.fileMeta[path];
         await prefetchFileSha(path);
-      }
 
-      const body = {
-        message: `weibo: update ${path}`,
-        content: encodeBase64Utf8(JSON.stringify(content, null, 2)),
-      };
-      if (state.fileMeta[path]?.sha) body.sha = state.fileMeta[path].sha;
+        const body = {
+          message: `weibo: update ${path}`,
+          content: payload,
+        };
+        if (state.fileMeta[path]?.sha) body.sha = state.fileMeta[path].sha;
 
-      const res = await fetch(
-        `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${path}`,
-        {
-          method: 'PUT',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-            Accept: 'application/vnd.github+json',
-          },
-          body: JSON.stringify(body),
+        const res = await fetch(
+          `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${path}`,
+          {
+            method: 'PUT',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+              Accept: 'application/vnd.github+json',
+            },
+            body: JSON.stringify(body),
+          }
+        );
+
+        if (res.ok) {
+          const data = await res.json();
+          state.fileMeta[path] = { sha: data.content.sha };
+          return;
         }
-      );
 
-      if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        throw new Error(err.message || `保存失败 (${res.status})`);
+        lastError = err.message || `保存失败 (${res.status})`;
+
+        if (!isShaConflict(lastError, res.status) || attempt === maxRetry - 1) {
+          throw new Error(lastError);
+        }
+        await new Promise((r) => setTimeout(r, 400 * (attempt + 1)));
       }
 
-      const data = await res.json();
-      state.fileMeta[path] = { sha: data.content.sha };
+      throw new Error(lastError);
     }
 
     function sortPosts(posts) {
@@ -853,16 +872,16 @@
       try {
         await saveAll(recent, archive);
       } catch (err) {
-        // sha 过期时刷新后重试一次
-        if (/sha/i.test(err.message)) {
-          state.fileMeta = {};
-          await ensureArchiveLoaded();
-          await readFile(CONFIG.recentFile);
-          await readFile(CONFIG.archiveFile);
-          await saveAll(recent, archive);
-        } else {
-          throw err;
+        if (!isShaConflict(err.message)) throw err;
+        state.fileMeta = {};
+        state.recent = sortPosts(normalizePosts(await readFileFresh(CONFIG.recentFile)));
+        if (state.archive !== null) {
+          state.archive = sortPosts(normalizePosts(await readFileFresh(CONFIG.archiveFile)));
         }
+        const merged = sortPosts([...allPosts, ...getAllPosts()])
+          .filter((p, i, arr) => arr.findIndex((x) => x.id === p.id) === i);
+        const split = splitRecentArchive(merged);
+        await saveAll(split.recent, split.archive);
       }
     }
 
