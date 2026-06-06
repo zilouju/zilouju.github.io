@@ -665,8 +665,9 @@
       let lastError = '保存失败';
 
       for (let attempt = 0; attempt < maxRetry; attempt++) {
-        delete state.fileMeta[path];
-        await prefetchFileSha(path);
+        if (!state.fileMeta[path]?.sha) {
+          await prefetchFileSha(path);
+        }
 
         const body = {
           message: `weibo: update ${path}`,
@@ -699,6 +700,7 @@
         if (!isShaConflict(lastError, res.status) || attempt === maxRetry - 1) {
           throw new Error(lastError);
         }
+        delete state.fileMeta[path];
         await new Promise((r) => setTimeout(r, 400 * (attempt + 1)));
       }
 
@@ -736,6 +738,9 @@
     }
 
     async function getAllPostsForWrite() {
+      if (state.archive === null && state.recent.length < CONFIG.recentLimit) {
+        return getAllPosts();
+      }
       await ensureArchiveLoaded();
       return getAllPosts();
     }
@@ -848,18 +853,48 @@
     }
 
     /* ── Persist helpers ── */
+    function postsEqual(a, b) {
+      return JSON.stringify(a || []) === JSON.stringify(b || []);
+    }
+
     function applyPostsToState(recent, archive) {
       state.recent = sortPosts(recent);
       if (archive !== undefined) state.archive = sortPosts(archive);
     }
 
+    function snapshotPostsState() {
+      return {
+        recent: [...state.recent],
+        archive: state.archive === null ? null : [...state.archive],
+        displayed: [...state.displayed],
+        recentShown: state.recentShown,
+        archiveShown: state.archiveShown,
+      };
+    }
+
+    function restorePostsState(snapshot) {
+      state.recent = snapshot.recent;
+      state.archive = snapshot.archive;
+      state.displayed = snapshot.displayed;
+      state.recentShown = snapshot.recentShown;
+      state.archiveShown = snapshot.archiveShown;
+      renderFeed();
+      updateLoadMoreUI();
+      updateFeedCount();
+    }
+
+    async function persistPostFiles(normRecent, normArchive, archiveChanged) {
+      await writeFile(CONFIG.recentFile, normRecent);
+      if (normArchive !== undefined && archiveChanged) {
+        await writeFile(CONFIG.archiveFile, normArchive);
+      }
+    }
+
     async function saveAll(recent, archive) {
       const normRecent = normalizePosts(recent);
       const normArchive = archive !== undefined ? normalizePosts(archive) : undefined;
-      await writeFile(CONFIG.recentFile, normRecent);
-      if (normArchive !== undefined) {
-        await writeFile(CONFIG.archiveFile, normArchive);
-      }
+      const archiveChanged = normArchive !== undefined && !postsEqual(normArchive, state.archive);
+      await persistPostFiles(normRecent, normArchive, archiveChanged);
       applyPostsToState(normRecent, normArchive);
     }
 
@@ -909,15 +944,21 @@
       };
       const all = [post, ...(await getAllPostsForWrite())];
       const { recent, archive } = splitRecentArchive(all);
-      await saveAll(recent, archive);
+      const normRecent = normalizePosts(recent);
+      const normArchive = normalizePosts(archive);
+      const archiveChanged = !postsEqual(normArchive, state.archive);
+      const snapshot = snapshotPostsState();
       const displayCount = state.displayed.length + 1;
-      state.displayed = getAllPosts().slice(0, displayCount);
-      state.recentShown = Math.min(displayCount, state.recent.length);
-      state.archiveShown = Math.max(0, displayCount - state.recent.length);
-      renderFeed();
-      updateLoadMoreUI();
-      updateFeedCount();
-      toast('发布成功 ☀️');
+      applyPostsToState(normRecent, normArchive);
+      reloadViewFromState(displayCount);
+      toast('发布成功，正在同步…');
+
+      persistPostFiles(normRecent, normArchive, archiveChanged)
+        .then(() => toast('已同步到 GitHub ☀️'))
+        .catch((err) => {
+          restorePostsState(snapshot);
+          toast(`同步失败，已回滚：${err.message}`);
+        });
     }
 
     async function updatePost(id, content) {
@@ -933,10 +974,21 @@
       if (!confirm('确定删除这条动态？评论也会一并删除。')) return;
       const all = (await getAllPostsForWrite()).filter(p => p.id !== id);
       const { recent, archive } = splitRecentArchive(all);
-      await saveAll(recent, archive);
-      state.displayed = state.displayed.filter(p => p.id !== id);
-      reloadViewFromState(state.displayed.length);
-      toast('已删除');
+      const normRecent = normalizePosts(recent);
+      const normArchive = normalizePosts(archive);
+      const archiveChanged = !postsEqual(normArchive, state.archive);
+      const snapshot = snapshotPostsState();
+      const displayCount = state.displayed.filter(p => p.id !== id).length;
+      applyPostsToState(normRecent, normArchive);
+      reloadViewFromState(displayCount);
+      toast('已删除，正在同步…');
+
+      persistPostFiles(normRecent, normArchive, archiveChanged)
+        .then(() => toast('已同步到 GitHub'))
+        .catch((err) => {
+          restorePostsState(snapshot);
+          toast(`同步失败，已回滚：${err.message}`);
+        });
     }
 
     /* ── CRUD: Comments ── */
