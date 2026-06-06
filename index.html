@@ -550,6 +550,21 @@
       }
     }
 
+    /* ── UTF-8 Base64（GitHub API 读写中文必用） ── */
+    function encodeBase64Utf8(str) {
+      const bytes = new TextEncoder().encode(str);
+      let binary = '';
+      for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+      return btoa(binary);
+    }
+
+    function decodeBase64Utf8(base64) {
+      const binary = atob(base64.replace(/\n/g, ''));
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+      return new TextDecoder('utf-8').decode(bytes);
+    }
+
     /* ── Data I/O ── */
     async function fetchJsonLocal(path) {
       const res = await fetch(`./${path}?t=${Date.now()}`);
@@ -566,8 +581,7 @@
       if (!res.ok) throw new Error(`GitHub API: ${res.status}`);
       const data = await res.json();
       state.fileMeta[path] = { sha: data.sha };
-      const content = JSON.parse(atob(data.content.replace(/\n/g, '')));
-      return content;
+      return JSON.parse(decodeBase64Utf8(data.content));
     }
 
     async function readFile(path) {
@@ -588,7 +602,7 @@
 
       const body = {
         message: `weibo: update ${path}`,
-        content: btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2)))),
+        content: encodeBase64Utf8(JSON.stringify(content, null, 2)),
       };
       if (state.fileMeta[path]?.sha) body.sha = state.fileMeta[path].sha;
 
