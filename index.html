@@ -911,7 +911,7 @@
       const { recent, archive } = splitRecentArchive(all);
       await saveAll(recent, archive);
       const displayCount = state.displayed.length + 1;
-      state.displayed = all.slice(0, displayCount);
+      state.displayed = getAllPosts().slice(0, displayCount);
       state.recentShown = Math.min(displayCount, state.recent.length);
       state.archiveShown = Math.max(0, displayCount - state.recent.length);
       renderFeed();
