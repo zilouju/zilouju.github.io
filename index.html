@@ -474,6 +474,8 @@
       pageSize: 8,           // 首页每页展示条数
       archiveChunk: 10,      // 历史每次加载条数
       tokenKey: 'weibo_github_token',
+      draftKey: 'weibo_compose_draft',
+      pendingOpsKey: 'weibo_pending_ops',
     };
 
     /* ── State ── */
@@ -584,6 +586,30 @@
         statusText.textContent = '只读模式 · 点击 ⚙️ 配置 Token 后可发帖';
         composeInput.disabled = false;
       }
+    }
+
+    function updateComposeState() {
+      $('char-count').textContent = composeInput.value.length;
+      btnPost.disabled = !composeInput.value.trim() || state.loading;
+    }
+
+    function saveComposeDraft() {
+      const value = composeInput.value;
+      if (value) localStorage.setItem(CONFIG.draftKey, value);
+      else localStorage.removeItem(CONFIG.draftKey);
+    }
+
+    function clearComposeDraft() {
+      localStorage.removeItem(CONFIG.draftKey);
+    }
+
+    function restoreComposeDraft() {
+      const draft = localStorage.getItem(CONFIG.draftKey);
+      if (!draft || composeInput.value) return;
+      const maxLength = composeInput.maxLength > 0 ? composeInput.maxLength : draft.length;
+      composeInput.value = draft.slice(0, maxLength);
+      updateComposeState();
+      toast('已恢复上次未发布的草稿');
     }
 
     /* ── UTF-8 Base64（GitHub API 读写中文必用） ── */
@@ -718,6 +744,43 @@
       state.recent = sortPosts(normalizePosts(await readFile(CONFIG.recentFile)));
     }
 
+    function readPendingOps() {
+      try {
+        const ops = JSON.parse(localStorage.getItem(CONFIG.pendingOpsKey) || '[]');
+        return Array.isArray(ops) ? ops : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function writePendingOps(ops) {
+      if (ops.length > 0) localStorage.setItem(CONFIG.pendingOpsKey, JSON.stringify(ops));
+      else localStorage.removeItem(CONFIG.pendingOpsKey);
+    }
+
+    function addPendingOp(op) {
+      const ops = readPendingOps().filter((item) => item.id !== op.id);
+      ops.push(op);
+      writePendingOps(ops);
+    }
+
+    function removePendingOp(id) {
+      writePendingOps(readPendingOps().filter((op) => op.id !== id));
+    }
+
+    function applyPendingOps(posts, ops = readPendingOps()) {
+      return ops.reduce((current, op) => {
+        if (op.type === 'create' && op.post) {
+          const withoutDuplicate = current.filter((p) => p.id !== op.post.id);
+          return [op.post, ...withoutDuplicate];
+        }
+        if (op.type === 'delete' && op.postId) {
+          return current.filter((p) => p.id !== op.postId);
+        }
+        return current;
+      }, sortPosts(posts));
+    }
+
     async function loadArchive(silent = false) {
       if (state.archive !== null) return;
       if (!silent) {
@@ -751,12 +814,23 @@
       statusText.textContent = '正在加载最新动态…';
       try {
         await loadRecent();
+        const pendingOps = readPendingOps();
+        if (pendingOps.length > 0) {
+          const optimistic = applyPendingOps(state.recent, pendingOps);
+          const split = splitRecentArchive(optimistic);
+          applyOptimisticSplit(normalizePosts(split.recent), normalizePosts(split.archive), true);
+        }
         state.recentShown = 0;
         state.archiveShown = 0;
         state.displayed = [];
         renderNextPage();
         updateStatus();
         updateFeedCount();
+        restoreComposeDraft();
+        if (pendingOps.length > 0) {
+          toast('已恢复未同步的本地操作，正在继续同步…');
+          syncPendingOps(pendingOps);
+        }
       } catch (e) {
         statusBar.className = 'status-bar error';
         statusText.textContent = '加载失败：' + e.message;
@@ -921,6 +995,22 @@
       return state.persistQueue;
     }
 
+    function syncPendingOps(ops = readPendingOps()) {
+      if (!canWrite() || ops.length === 0) return;
+      const snapshot = snapshotPostsState();
+      const version = ++state.localVersion;
+      const opIds = ops.map((op) => op.id);
+      enqueuePersist(async () => {
+        const basePosts = await postsFromSnapshot(snapshot);
+        const fullSplit = splitRecentArchive(applyPendingOps(basePosts, ops));
+        const fullRecent = normalizePosts(fullSplit.recent);
+        const fullArchive = normalizePosts(fullSplit.archive);
+        const archiveChanged = !postsEqual(fullArchive, snapshot.archive);
+        await persistPostFiles(fullRecent, fullArchive, archiveChanged);
+        opIds.forEach(removePendingOp);
+      }, snapshot, version, '未同步操作已保存到 GitHub');
+    }
+
     async function saveAll(recent, archive) {
       const normRecent = normalizePosts(recent);
       const normArchive = archive !== undefined ? normalizePosts(archive) : undefined;
@@ -980,6 +1070,8 @@
       const normArchive = normalizePosts(archive);
       const keepArchiveUnloaded = snapshot.archive === null;
       const version = ++state.localVersion;
+      const pendingOp = { id: post.id, type: 'create', post };
+      addPendingOp(pendingOp);
       const displayCount = state.displayed.length + 1;
       applyOptimisticSplit(normRecent, normArchive, keepArchiveUnloaded);
       reloadViewFromState(displayCount);
@@ -992,6 +1084,7 @@
         const fullArchive = normalizePosts(fullSplit.archive);
         const archiveChanged = !postsEqual(fullArchive, snapshot.archive);
         await persistPostFiles(fullRecent, fullArchive, archiveChanged);
+        removePendingOp(pendingOp.id);
       }, snapshot, version, '已同步到 GitHub ☀️');
     }
 
@@ -1013,6 +1106,8 @@
       const normArchive = normalizePosts(archive);
       const keepArchiveUnloaded = snapshot.archive === null;
       const version = ++state.localVersion;
+      const pendingOp = { id: uid('delete'), type: 'delete', postId: id };
+      addPendingOp(pendingOp);
       const displayCount = state.displayed.filter(p => p.id !== id).length;
       applyOptimisticSplit(normRecent, normArchive, keepArchiveUnloaded);
       reloadViewFromState(displayCount);
@@ -1025,6 +1120,7 @@
         const fullArchive = normalizePosts(fullSplit.archive);
         const archiveChanged = !postsEqual(fullArchive, snapshot.archive);
         await persistPostFiles(fullRecent, fullArchive, archiveChanged);
+        removePendingOp(pendingOp.id);
       }, snapshot, version, '已同步到 GitHub');
     }
 
@@ -1277,8 +1373,14 @@
 
     /* ── Compose ── */
     composeInput.addEventListener('input', () => {
-      $('char-count').textContent = composeInput.value.length;
-      btnPost.disabled = !composeInput.value.trim() || state.loading;
+      saveComposeDraft();
+      updateComposeState();
+    });
+
+    window.addEventListener('beforeunload', saveComposeDraft);
+    window.addEventListener('pagehide', saveComposeDraft);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') saveComposeDraft();
     });
 
     btnPost.addEventListener('click', async () => {
@@ -1297,13 +1399,14 @@
       try {
         await createPost(content);
         composeInput.value = '';
-        $('char-count').textContent = '0';
+        clearComposeDraft();
+        updateComposeState();
       } catch (err) {
         toast(err.message);
       } finally {
         state.loading = false;
         btnPost.textContent = '发布';
-        btnPost.disabled = !composeInput.value.trim();
+        updateComposeState();
       }
     });
 
