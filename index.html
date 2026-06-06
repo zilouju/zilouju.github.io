@@ -623,16 +623,30 @@
       state.recent = sortPosts(await readFile(CONFIG.recentFile));
     }
 
-    async function loadArchive() {
+    async function loadArchive(silent = false) {
       if (state.archive !== null) return;
-      state.archiveLoading = true;
-      updateLoadMoreUI();
+      if (!silent) {
+        state.archiveLoading = true;
+        updateLoadMoreUI();
+      }
       try {
         state.archive = sortPosts(await readFile(CONFIG.archiveFile));
       } catch {
         state.archive = [];
       }
-      state.archiveLoading = false;
+      if (!silent) {
+        state.archiveLoading = false;
+      }
+    }
+
+    /** 写入前必须加载归档，否则 getAllPosts() 会丢历史数据 */
+    async function ensureArchiveLoaded() {
+      await loadArchive(true);
+    }
+
+    async function getAllPostsForWrite() {
+      await ensureArchiveLoaded();
+      return getAllPosts();
     }
 
     async function init() {
@@ -689,7 +703,9 @@
       const wrap = $('load-more-wrap');
       const hasMoreRecent = state.recentShown < state.recent.length;
       const hasArchive = state.recent.length >= CONFIG.recentLimit || (state.archive && state.archiveShown < state.archive.length);
-      const archiveNotLoaded = state.archive === null && state.recentShown >= state.recent.length && state.recent.length > 0;
+      const archiveNotLoaded = state.archive === null
+        && state.recentShown >= state.recent.length
+        && state.recent.length >= CONFIG.recentLimit;
       const hasMoreArchive = state.archive && state.archiveShown < state.archive.length;
 
       if (state.archiveLoading) {
@@ -769,7 +785,20 @@
 
     async function persistPosts(allPosts) {
       const { recent, archive } = splitRecentArchive(allPosts);
-      await saveAll(recent, archive);
+      try {
+        await saveAll(recent, archive);
+      } catch (err) {
+        // sha 过期时刷新后重试一次
+        if (/sha/i.test(err.message)) {
+          state.fileMeta = {};
+          await ensureArchiveLoaded();
+          await readFile(CONFIG.recentFile);
+          await readFile(CONFIG.archiveFile);
+          await saveAll(recent, archive);
+        } else {
+          throw err;
+        }
+      }
     }
 
     /* ── CRUD: Posts ── */
@@ -781,7 +810,7 @@
         updatedAt: new Date().toISOString(),
         comments: [],
       };
-      const all = [post, ...getAllPosts()];
+      const all = [post, ...(await getAllPostsForWrite())];
       await persistPosts(all);
       const displayCount = state.displayed.length + 1;
       await loadRecent();
@@ -798,7 +827,7 @@
     }
 
     async function updatePost(id, content) {
-      const all = getAllPosts().map(p =>
+      const all = (await getAllPostsForWrite()).map(p =>
         p.id === id ? { ...p, content: content.trim(), updatedAt: new Date().toISOString() } : p
       );
       await persistPosts(all);
@@ -808,7 +837,7 @@
 
     async function deletePost(id) {
       if (!confirm('确定删除这条动态？评论也会一并删除。')) return;
-      const all = getAllPosts().filter(p => p.id !== id);
+      const all = (await getAllPostsForWrite()).filter(p => p.id !== id);
       await persistPosts(all);
       state.displayed = state.displayed.filter(p => p.id !== id);
       await loadRecent();
@@ -823,7 +852,7 @@
 
     /* ── CRUD: Comments ── */
     async function addComment(postId, content) {
-      const all = getAllPosts().map(p => {
+      const all = (await getAllPostsForWrite()).map(p => {
         if (p.id !== postId) return p;
         return {
           ...p,
@@ -842,7 +871,7 @@
     }
 
     async function updateComment(postId, commentId, content) {
-      const all = getAllPosts().map(p => {
+      const all = (await getAllPostsForWrite()).map(p => {
         if (p.id !== postId) return p;
         return {
           ...p,
@@ -859,7 +888,7 @@
 
     async function deleteComment(postId, commentId) {
       if (!confirm('确定删除这条评论？')) return;
-      const all = getAllPosts().map(p => {
+      const all = (await getAllPostsForWrite()).map(p => {
         if (p.id !== postId) return p;
         return { ...p, comments: (p.comments || []).filter(c => c.id !== commentId) };
       });
@@ -1114,12 +1143,19 @@
       if (e.target === $('settings-modal')) $('settings-modal').classList.remove('open');
     });
 
-    $('btn-modal-save').addEventListener('click', () => {
+    $('btn-modal-save').addEventListener('click', async () => {
       const token = $('token-input').value.trim();
       if (token) localStorage.setItem(CONFIG.tokenKey, token);
       else localStorage.removeItem(CONFIG.tokenKey);
+      state.fileMeta = {};
       $('settings-modal').classList.remove('open');
       updateStatus();
+      if (token) {
+        try {
+          await readFile(CONFIG.recentFile);
+          await ensureArchiveLoaded();
+        } catch { /* 读取失败不影响保存 token */ }
+      }
       toast(token ? 'Token 已保存' : 'Token 已清除');
     });
 
