@@ -539,15 +539,26 @@
       return el.innerHTML;
     }
 
-    /** 修复 UTF-8 被误读为 Latin-1 的历史乱码（仅影响中文等多字节字符） */
+    /** 是否为 UTF-8 被误读为 Latin-1 的乱码（含双重编码的中间态） */
+    function looksLikeMojibake(str) {
+      return /[\u0080-\u00ff]/.test(str) && !/[\u4e00-\u9fff]/.test(str);
+    }
+
+    /** 修复 UTF-8 被误读为 Latin-1 的历史乱码（支持双重编码） */
     function fixMojibake(str) {
       if (!str || /^[\x00-\x7F]*$/.test(str)) return str;
-      try {
-        const bytes = Uint8Array.from(str, (c) => c.charCodeAt(0) & 0xff);
-        const fixed = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
-        if (/[\u4e00-\u9fff]/.test(fixed)) return fixed;
-      } catch { /* 非乱码，保持原样 */ }
-      return str;
+      if (!looksLikeMojibake(str)) return str;
+      let cur = str;
+      for (let pass = 0; pass < 3; pass++) {
+        if (!looksLikeMojibake(cur)) break;
+        try {
+          const bytes = Uint8Array.from(cur, (c) => c.charCodeAt(0) & 0xff);
+          const fixed = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+          if (fixed === cur) break;
+          cur = fixed;
+        } catch { break; }
+      }
+      return cur;
     }
 
     function normalizePosts(posts) {
@@ -843,11 +854,13 @@
     }
 
     async function saveAll(recent, archive) {
-      await writeFile(CONFIG.recentFile, recent);
-      if (archive !== undefined) {
-        await writeFile(CONFIG.archiveFile, archive);
+      const normRecent = normalizePosts(recent);
+      const normArchive = archive !== undefined ? normalizePosts(archive) : undefined;
+      await writeFile(CONFIG.recentFile, normRecent);
+      if (normArchive !== undefined) {
+        await writeFile(CONFIG.archiveFile, normArchive);
       }
-      applyPostsToState(recent, archive);
+      applyPostsToState(normRecent, normArchive);
     }
 
     function findPost(id) {
