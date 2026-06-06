@@ -179,6 +179,40 @@
     .status-bar.error { background: #ffeef0; border-color: #ffb8c0; color: #d63031; }
     .status-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
 
+    .operation-progress {
+      margin: -0.35rem 0 1rem;
+      padding: 0.65rem 0.8rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .operation-progress[hidden] { display: none; }
+
+    .operation-progress-text {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.45rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .operation-progress-track {
+      height: 7px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: var(--bg-warm);
+    }
+
+    .operation-progress-bar {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--teal) 0%, var(--coral) 100%);
+      transition: width 0.25s ease;
+    }
+
     /* Feed */
     .feed-header {
       display: flex;
@@ -425,6 +459,15 @@
       <span class="status-dot"></span>
       <span id="status-text">正在加载…</span>
     </div>
+    <div class="operation-progress" id="operation-progress" hidden>
+      <div class="operation-progress-text">
+        <span id="operation-progress-label">正在保存…</span>
+        <span id="operation-progress-percent">0%</span>
+      </div>
+      <div class="operation-progress-track">
+        <div class="operation-progress-bar" id="operation-progress-bar"></div>
+      </div>
+    </div>
 
     <section class="compose" id="compose-section">
       <textarea id="compose-input" placeholder="分享此刻的想法，像夏日微风一样轻松…" maxlength="500"></textarea>
@@ -475,7 +518,6 @@
       archiveChunk: 10,      // 历史每次加载条数
       tokenKey: 'weibo_github_token',
       draftKey: 'weibo_compose_draft',
-      pendingOpsKey: 'weibo_pending_ops',
     };
 
     /* ── State ── */
@@ -491,8 +533,8 @@
       editingComment: null,
       loading: false,
       archiveLoading: false,
-      localVersion: 0,
-      persistQueue: Promise.resolve(),
+      operationTimer: null,
+      operationProgress: 0,
     };
 
     /* ── DOM ── */
@@ -502,6 +544,10 @@
     const btnPost = $('btn-post');
     const statusBar = $('status-bar');
     const statusText = $('status-text');
+    const operationProgress = $('operation-progress');
+    const operationProgressLabel = $('operation-progress-label');
+    const operationProgressPercent = $('operation-progress-percent');
+    const operationProgressBar = $('operation-progress-bar');
 
     /* ── Utils ── */
     function uid(prefix) {
@@ -521,6 +567,46 @@
       el.textContent = msg;
       el.classList.add('show');
       setTimeout(() => el.classList.remove('show'), duration);
+    }
+
+    function setOperationProgress(value, label) {
+      state.operationProgress = Math.max(0, Math.min(100, value));
+      operationProgressBar.style.width = `${state.operationProgress}%`;
+      operationProgressPercent.textContent = `${Math.round(state.operationProgress)}%`;
+      if (label) operationProgressLabel.textContent = label;
+    }
+
+    function startOperation(label) {
+      clearInterval(state.operationTimer);
+      operationProgress.hidden = false;
+      setOperationProgress(8, label);
+      state.operationTimer = setInterval(() => {
+        const next = state.operationProgress + Math.max(1, (88 - state.operationProgress) * 0.18);
+        setOperationProgress(Math.min(next, 88));
+      }, 350);
+    }
+
+    function stopOperation(label) {
+      clearInterval(state.operationTimer);
+      state.operationTimer = null;
+      setOperationProgress(100, label);
+      setTimeout(() => {
+        if (!state.operationTimer) operationProgress.hidden = true;
+      }, 650);
+    }
+
+    async function withOperationProgress(label, successLabel, task) {
+      startOperation(label);
+      try {
+        const result = await task();
+        stopOperation(successLabel);
+        return result;
+      } catch (err) {
+        clearInterval(state.operationTimer);
+        state.operationTimer = null;
+        operationProgress.hidden = true;
+        throw err;
+      }
     }
 
     function formatTime(iso) {
@@ -660,13 +746,13 @@
       return JSON.parse(decodeBase64Utf8(data.content));
     }
 
-    /** 读取：静态 JSON 优先（UTF-8 可靠）；有 Token 时并行预取 sha 供写入 */
+    /** 读取：有 Token 时走 GitHub API，避免 GitHub Pages/CDN 缓存导致刷新后读到旧数据 */
     async function readFile(path) {
-      const [data] = await Promise.all([
-        fetchJsonLocal(path),
-        canWrite() ? prefetchFileSha(path) : Promise.resolve(),
-      ]);
-      return data;
+      if (canWrite()) {
+        try { return await fetchJsonGitHub(path); }
+        catch { /* fallback to static */ }
+      }
+      return fetchJsonLocal(path);
     }
 
     /** 有 Token 时从 API 拉最新数据（发帖保存后用，避免 CDN 缓存滞后） */
@@ -744,43 +830,6 @@
       state.recent = sortPosts(normalizePosts(await readFile(CONFIG.recentFile)));
     }
 
-    function readPendingOps() {
-      try {
-        const ops = JSON.parse(localStorage.getItem(CONFIG.pendingOpsKey) || '[]');
-        return Array.isArray(ops) ? ops : [];
-      } catch {
-        return [];
-      }
-    }
-
-    function writePendingOps(ops) {
-      if (ops.length > 0) localStorage.setItem(CONFIG.pendingOpsKey, JSON.stringify(ops));
-      else localStorage.removeItem(CONFIG.pendingOpsKey);
-    }
-
-    function addPendingOp(op) {
-      const ops = readPendingOps().filter((item) => item.id !== op.id);
-      ops.push(op);
-      writePendingOps(ops);
-    }
-
-    function removePendingOp(id) {
-      writePendingOps(readPendingOps().filter((op) => op.id !== id));
-    }
-
-    function applyPendingOps(posts, ops = readPendingOps()) {
-      return ops.reduce((current, op) => {
-        if (op.type === 'create' && op.post) {
-          const withoutDuplicate = current.filter((p) => p.id !== op.post.id);
-          return [op.post, ...withoutDuplicate];
-        }
-        if (op.type === 'delete' && op.postId) {
-          return current.filter((p) => p.id !== op.postId);
-        }
-        return current;
-      }, sortPosts(posts));
-    }
-
     async function loadArchive(silent = false) {
       if (state.archive !== null) return;
       if (!silent) {
@@ -814,12 +863,6 @@
       statusText.textContent = '正在加载最新动态…';
       try {
         await loadRecent();
-        const pendingOps = readPendingOps();
-        if (pendingOps.length > 0) {
-          const optimistic = applyPendingOps(state.recent, pendingOps);
-          const split = splitRecentArchive(optimistic);
-          applyOptimisticSplit(normalizePosts(split.recent), normalizePosts(split.archive), true);
-        }
         state.recentShown = 0;
         state.archiveShown = 0;
         state.displayed = [];
@@ -827,10 +870,6 @@
         updateStatus();
         updateFeedCount();
         restoreComposeDraft();
-        if (pendingOps.length > 0) {
-          toast('已恢复未同步的本地操作，正在继续同步…');
-          syncPendingOps(pendingOps);
-        }
       } catch (e) {
         statusBar.className = 'status-bar error';
         statusText.textContent = '加载失败：' + e.message;
@@ -938,77 +977,11 @@
       if (archive !== undefined) state.archive = sortPosts(archive);
     }
 
-    function snapshotPostsState() {
-      return {
-        recent: [...state.recent],
-        archive: state.archive === null ? null : [...state.archive],
-        displayed: [...state.displayed],
-        recentShown: state.recentShown,
-        archiveShown: state.archiveShown,
-      };
-    }
-
-    function restorePostsState(snapshot) {
-      state.recent = snapshot.recent;
-      state.archive = snapshot.archive;
-      state.displayed = snapshot.displayed;
-      state.recentShown = snapshot.recentShown;
-      state.archiveShown = snapshot.archiveShown;
-      renderFeed();
-      updateLoadMoreUI();
-      updateFeedCount();
-    }
-
-    async function postsFromSnapshot(snapshot) {
-      if (snapshot.archive !== null) {
-        return sortPosts([...snapshot.recent, ...snapshot.archive]);
-      }
-      if (snapshot.recent.length < CONFIG.recentLimit) {
-        return sortPosts(snapshot.recent);
-      }
-      const archive = sortPosts(normalizePosts(await readFileFresh(CONFIG.archiveFile)));
-      return sortPosts([...snapshot.recent, ...archive]);
-    }
-
-    function applyOptimisticSplit(recent, archive, keepArchiveUnloaded) {
-      state.recent = sortPosts(recent);
-      if (!keepArchiveUnloaded) state.archive = sortPosts(archive);
-    }
-
     async function persistPostFiles(normRecent, normArchive, archiveChanged) {
       await writeFile(CONFIG.recentFile, normRecent);
       if (normArchive !== undefined && archiveChanged) {
         await writeFile(CONFIG.archiveFile, normArchive);
       }
-    }
-
-    function enqueuePersist(task, snapshot, version, successMessage) {
-      state.persistQueue = state.persistQueue
-        .then(task)
-        .then(() => toast(successMessage))
-        .catch((err) => {
-          if (state.localVersion === version) {
-            restorePostsState(snapshot);
-          }
-          toast(`同步失败${state.localVersion === version ? '，已回滚' : ''}：${err.message}`);
-        });
-      return state.persistQueue;
-    }
-
-    function syncPendingOps(ops = readPendingOps()) {
-      if (!canWrite() || ops.length === 0) return;
-      const snapshot = snapshotPostsState();
-      const version = ++state.localVersion;
-      const opIds = ops.map((op) => op.id);
-      enqueuePersist(async () => {
-        const basePosts = await postsFromSnapshot(snapshot);
-        const fullSplit = splitRecentArchive(applyPendingOps(basePosts, ops));
-        const fullRecent = normalizePosts(fullSplit.recent);
-        const fullArchive = normalizePosts(fullSplit.archive);
-        const archiveChanged = !postsEqual(fullArchive, snapshot.archive);
-        await persistPostFiles(fullRecent, fullArchive, archiveChanged);
-        opIds.forEach(removePendingOp);
-      }, snapshot, version, '未同步操作已保存到 GitHub');
     }
 
     async function saveAll(recent, archive) {
@@ -1056,119 +1029,99 @@
 
     /* ── CRUD: Posts ── */
     async function createPost(content) {
-      const post = {
-        id: uid('post'),
-        content: content.trim(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        comments: [],
-      };
-      const snapshot = snapshotPostsState();
-      const optimisticAll = [post, ...getAllPosts()];
-      const { recent, archive } = splitRecentArchive(optimisticAll);
-      const normRecent = normalizePosts(recent);
-      const normArchive = normalizePosts(archive);
-      const keepArchiveUnloaded = snapshot.archive === null;
-      const version = ++state.localVersion;
-      const pendingOp = { id: post.id, type: 'create', post };
-      addPendingOp(pendingOp);
-      const displayCount = state.displayed.length + 1;
-      applyOptimisticSplit(normRecent, normArchive, keepArchiveUnloaded);
-      reloadViewFromState(displayCount);
-      toast('发布成功，正在同步…');
-
-      enqueuePersist(async () => {
-        const basePosts = await postsFromSnapshot(snapshot);
-        const fullSplit = splitRecentArchive([post, ...basePosts]);
-        const fullRecent = normalizePosts(fullSplit.recent);
-        const fullArchive = normalizePosts(fullSplit.archive);
-        const archiveChanged = !postsEqual(fullArchive, snapshot.archive);
-        await persistPostFiles(fullRecent, fullArchive, archiveChanged);
-        removePendingOp(pendingOp.id);
-      }, snapshot, version, '已同步到 GitHub ☀️');
+      await withOperationProgress('正在发布到 GitHub…', '发布完成', async () => {
+        const post = {
+          id: uid('post'),
+          content: content.trim(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          comments: [],
+        };
+        const all = [post, ...(await getAllPostsForWrite())];
+        const { recent, archive } = splitRecentArchive(all);
+        await saveAll(recent, archive);
+        const displayCount = state.displayed.length + 1;
+        reloadViewFromState(displayCount);
+      });
+      toast('发布成功 ☀️');
     }
 
     async function updatePost(id, content) {
-      const all = (await getAllPostsForWrite()).map(p =>
-        p.id === id ? { ...p, content: content.trim(), updatedAt: new Date().toISOString() } : p
-      );
-      await persistPosts(all);
-      await reloadAndKeepView();
+      await withOperationProgress('正在保存编辑…', '保存完成', async () => {
+        const all = (await getAllPostsForWrite()).map(p =>
+          p.id === id ? { ...p, content: content.trim(), updatedAt: new Date().toISOString() } : p
+        );
+        await persistPosts(all);
+        await reloadAndKeepView();
+      });
       toast('已更新');
     }
 
     async function deletePost(id) {
       if (!confirm('确定删除这条动态？评论也会一并删除。')) return;
-      const snapshot = snapshotPostsState();
-      const optimisticAll = getAllPosts().filter(p => p.id !== id);
-      const { recent, archive } = splitRecentArchive(optimisticAll);
-      const normRecent = normalizePosts(recent);
-      const normArchive = normalizePosts(archive);
-      const keepArchiveUnloaded = snapshot.archive === null;
-      const version = ++state.localVersion;
-      const pendingOp = { id: uid('delete'), type: 'delete', postId: id };
-      addPendingOp(pendingOp);
-      const displayCount = state.displayed.filter(p => p.id !== id).length;
-      applyOptimisticSplit(normRecent, normArchive, keepArchiveUnloaded);
-      reloadViewFromState(displayCount);
-      toast('已删除，正在同步…');
-
-      enqueuePersist(async () => {
-        const basePosts = await postsFromSnapshot(snapshot);
-        const fullSplit = splitRecentArchive(basePosts.filter(p => p.id !== id));
-        const fullRecent = normalizePosts(fullSplit.recent);
-        const fullArchive = normalizePosts(fullSplit.archive);
-        const archiveChanged = !postsEqual(fullArchive, snapshot.archive);
-        await persistPostFiles(fullRecent, fullArchive, archiveChanged);
-        removePendingOp(pendingOp.id);
-      }, snapshot, version, '已同步到 GitHub');
+      await withOperationProgress('正在从 GitHub 删除…', '删除完成', async () => {
+        const all = (await getAllPostsForWrite()).filter(p => p.id !== id);
+        const { recent, archive } = splitRecentArchive(all);
+        await saveAll(recent, archive);
+        reloadViewFromState(state.displayed.filter(p => p.id !== id).length);
+      });
+      toast('已删除');
     }
 
     /* ── CRUD: Comments ── */
     async function addComment(postId, content) {
-      const all = (await getAllPostsForWrite()).map(p => {
-        if (p.id !== postId) return p;
-        return {
-          ...p,
-          comments: [...(p.comments || []), {
-            id: uid('cmt'),
-            content: content.trim(),
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          }],
-        };
+      await withOperationProgress('正在保存评论…', '评论保存完成', async () => {
+        const all = (await getAllPostsForWrite()).map(p => {
+          if (p.id !== postId) return p;
+          return {
+            ...p,
+            comments: [...(p.comments || []), {
+              id: uid('cmt'),
+              content: content.trim(),
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            }],
+          };
+        });
+        await persistPosts(all);
+        await reloadAndKeepView();
+        state.expandedComments.add(postId);
+        renderFeed();
       });
-      await persistPosts(all);
-      await reloadAndKeepView();
-      state.expandedComments.add(postId);
       toast('评论成功');
     }
 
     async function updateComment(postId, commentId, content) {
-      const all = (await getAllPostsForWrite()).map(p => {
-        if (p.id !== postId) return p;
-        return {
-          ...p,
-          comments: (p.comments || []).map(c =>
-            c.id === commentId ? { ...c, content: content.trim(), updatedAt: new Date().toISOString() } : c
-          ),
-        };
+      await withOperationProgress('正在保存评论编辑…', '评论保存完成', async () => {
+        const all = (await getAllPostsForWrite()).map(p => {
+          if (p.id !== postId) return p;
+          return {
+            ...p,
+            comments: (p.comments || []).map(c =>
+              c.id === commentId ? { ...c, content: content.trim(), updatedAt: new Date().toISOString() } : c
+            ),
+          };
+        });
+        await persistPosts(all);
+        await reloadAndKeepView();
+        state.expandedComments.add(postId);
+        renderFeed();
       });
-      await persistPosts(all);
-      await reloadAndKeepView();
-      state.expandedComments.add(postId);
       toast('评论已更新');
     }
 
     async function deleteComment(postId, commentId) {
       if (!confirm('确定删除这条评论？')) return;
-      const all = (await getAllPostsForWrite()).map(p => {
-        if (p.id !== postId) return p;
-        return { ...p, comments: (p.comments || []).filter(c => c.id !== commentId) };
+      await withOperationProgress('正在删除评论…', '评论删除完成', async () => {
+        const all = (await getAllPostsForWrite()).map(p => {
+          if (p.id !== postId) return p;
+          return { ...p, comments: (p.comments || []).filter(c => c.id !== commentId) };
+        });
+        await persistPosts(all);
+        await reloadAndKeepView();
+        state.expandedComments.add(postId);
+        renderFeed();
       });
-      await persistPosts(all);
-      await reloadAndKeepView();
-      state.expandedComments.add(postId);
       toast('评论已删除');
     }
 
