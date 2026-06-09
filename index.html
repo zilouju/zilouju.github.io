@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="zilouju 夏日小微博">
-  <title>夏日小微博 · zilouju</title>
+  <meta name="description" content="zilouju 橘夏楼">
+  <title>橘夏楼 · zilouju</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%8A%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -448,7 +448,7 @@
     <header class="header">
       <div class="logo">
         <span class="logo-icon">☀️</span>
-        <span>夏日小微博</span>
+        <span>橘夏楼</span>
         <span style="font-size:0.65rem;font-weight:500;color:var(--text-muted);margin-left:0.25rem">v5</span>
       </div>
       <div class="header-actions">
@@ -620,14 +620,13 @@
     }
 
     function formatTime(iso) {
+      if (!iso) return '';
       const d = new Date(iso);
-      const now = new Date();
-      const time = d.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false });
-      const dateOpts = now.getFullYear() === d.getFullYear()
-        ? { month: 'numeric', day: 'numeric' }
-        : { year: 'numeric', month: 'numeric', day: 'numeric' };
-      const date = d.toLocaleDateString('zh-CN', dateOpts);
-      return `${time} · ${date}`;
+      if (Number.isNaN(d.getTime())) return '';
+      const pad = (n) => String(n).padStart(2, '0');
+      const date = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+      const time = `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+      return `${date} ${time}`;
     }
 
     function escapeHtml(str) {

@@ -1,4 +1,4 @@
-# 夏日小微博 · zilouju.github.io
+# 橘夏楼 · zilouju.github.io
 
 轻量个人微博，部署在 GitHub Pages 上。
 
