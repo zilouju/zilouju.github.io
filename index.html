@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="zilouju 橘夏楼">
-  <title>橘夏楼 · zilouju</title>
+  <meta name="description" content="zilouju 橘子楼">
+  <title>橘子楼 · zilouju</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%8A%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -76,21 +76,46 @@
     .header-actions { display: flex; gap: 0.5rem; }
 
     .icon-btn {
-      width: 38px;
-      height: 38px;
+      width: 36px;
+      height: 36px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      border-radius: 50%;
+      padding: 0;
+      border: 2px solid;
+      border-color: #fff8f0 #b8956e #9a7a58 #e8d5bc;
+      border-radius: 5px;
+      background: linear-gradient(180deg, #f8ead8 0%, #e8d4b8 45%, #dcc4a4 100%);
+      box-shadow:
+        1px 1px 0 rgba(120, 80, 40, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.65);
       cursor: pointer;
-      font-size: 1rem;
-      transition: all 0.2s;
-      color: var(--text-muted);
+      color: #7a5c3a;
+      transition: color 0.15s, box-shadow 0.1s, border-color 0.1s;
     }
 
-    .icon-btn:hover { border-color: var(--coral); color: var(--coral); transform: scale(1.05); }
+    .icon-btn-svg {
+      width: 17px;
+      height: 17px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      pointer-events: none;
+    }
+
+    .icon-btn:hover {
+      color: #c45c2a;
+      border-color: #fffaf4 #c9a07a #a88462 #f0e0cc;
+    }
+
+    .icon-btn:active {
+      border-color: #9a7a58 #fff8f0 #e8d5bc #b8956e;
+      background: linear-gradient(180deg, #dcc4a4 0%, #e8d4b8 55%, #f0e0cc 100%);
+      box-shadow: inset 1px 1px 3px rgba(80, 50, 20, 0.35);
+      transform: translateY(1px);
+    }
 
     /* Compose */
     .compose {
@@ -448,12 +473,24 @@
     <header class="header">
       <div class="logo">
         <span class="logo-icon">☀️</span>
-        <span>橘夏楼</span>
+        <span>橘子楼</span>
         <span style="font-size:0.65rem;font-weight:500;color:var(--text-muted);margin-left:0.25rem">v5</span>
       </div>
       <div class="header-actions">
-        <button class="icon-btn" id="btn-refresh" title="刷新" type="button">🔄</button>
-        <button class="icon-btn" id="btn-settings" title="设置" type="button">⚙️</button>
+        <button class="icon-btn" id="btn-refresh" title="刷新" type="button">
+          <svg class="icon-btn-svg" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 12a8 8 0 0 1 13.5-5.8L19 8"/>
+            <path d="M20 12a8 8 0 0 1-13.5 5.8L5 16"/>
+            <polyline points="19 3 19 8 14 8"/>
+            <polyline points="5 21 5 16 10 16"/>
+          </svg>
+        </button>
+        <button class="icon-btn" id="btn-settings" title="设置" type="button">
+          <svg class="icon-btn-svg" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.77 1.02 1.41 1.1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
       </div>
     </header>
 
