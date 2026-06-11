@@ -52,7 +52,93 @@
       z-index: 0;
     }
 
-    .app { position: relative; z-index: 1; max-width: 620px; margin: 0 auto; padding: 1.25rem 1rem 3rem; }
+    .layout {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      gap: 1.5rem;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 1.25rem 1rem 3rem;
+      align-items: flex-start;
+    }
+
+    .sidebar {
+      width: 168px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 1rem;
+    }
+
+    .sidebar-title {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.65rem;
+      padding-left: 0.65rem;
+    }
+
+    .category-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .category-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.62rem 0.75rem;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.55);
+      font-family: inherit;
+      font-size: 0.86rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.18s;
+    }
+
+    .category-btn:hover {
+      background: var(--surface);
+      border-color: var(--border);
+      color: var(--text);
+    }
+
+    .category-btn.active {
+      background: var(--surface);
+      border-color: var(--coral);
+      color: var(--coral);
+      box-shadow: var(--shadow);
+    }
+
+    .category-label { display: flex; align-items: center; gap: 0.4rem; min-width: 0; }
+    .category-icon { flex-shrink: 0; font-size: 0.95rem; }
+
+    .category-count {
+      flex-shrink: 0;
+      min-width: 1.35rem;
+      padding: 0.1rem 0.35rem;
+      border-radius: 999px;
+      background: var(--bg-warm);
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .category-btn.active .category-count {
+      background: var(--coral-soft);
+      color: var(--coral);
+    }
+
+    .app { position: relative; flex: 1; min-width: 0; max-width: 620px; }
 
     /* Header */
     .header {
@@ -142,6 +228,78 @@
 
     .compose textarea::placeholder { color: #b2bec3; }
 
+    .compose-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.65rem;
+      flex-wrap: wrap;
+    }
+
+    .compose-category-hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .compose-category-hint strong { color: var(--coral); font-weight: 600; }
+
+    .btn-image {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.35rem 0.7rem;
+      border: 1px dashed var(--border);
+      border-radius: 999px;
+      background: var(--bg-warm);
+      font-family: inherit;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .btn-image:hover:not(:disabled) { border-color: var(--teal); color: var(--teal); }
+    .btn-image:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .compose-images {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.65rem;
+    }
+
+    .compose-images:empty { display: none; }
+
+    .compose-image-item {
+      position: relative;
+      width: 72px;
+      height: 72px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .compose-image-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .compose-image-remove {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      width: 20px;
+      height: 20px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(45, 52, 54, 0.72);
+      color: #fff;
+      font-size: 0.75rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+
     .compose-footer {
       display: flex;
       align-items: center;
@@ -152,6 +310,44 @@
     }
 
     .char-count { font-size: 0.8rem; color: var(--text-muted); }
+
+    .post-images {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .post-image {
+      display: block;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      aspect-ratio: 1;
+      background: var(--bg-warm);
+    }
+
+    .post-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      cursor: zoom-in;
+      transition: transform 0.2s;
+    }
+
+    .post-image:hover img { transform: scale(1.03); }
+
+    .post-category-tag {
+      display: inline-block;
+      margin-right: 0.45rem;
+      padding: 0.1rem 0.45rem;
+      border-radius: 999px;
+      background: var(--coral-soft);
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--coral);
+      vertical-align: middle;
+    }
 
     .btn {
       padding: 0.5rem 1.15rem;
@@ -461,15 +657,60 @@
 
     .toast.show { transform: translateX(-50%) translateY(0); }
 
+    .image-lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 400;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      background: rgba(45, 52, 54, 0.82);
+      backdrop-filter: blur(6px);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.22s;
+      cursor: zoom-out;
+    }
+
+    .image-lightbox.open { opacity: 1; visibility: visible; }
+
+    .image-lightbox img {
+      max-width: min(92vw, 900px);
+      max-height: 88vh;
+      border-radius: 10px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    }
+
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; gap: 1rem; }
+      .sidebar { width: 100%; position: static; }
+      .category-nav {
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 0.25rem;
+        -webkit-overflow-scrolling: touch;
+      }
+      .category-btn { width: auto; flex-shrink: 0; white-space: nowrap; }
+      .sidebar-title { display: none; }
+    }
+
     @media (max-width: 480px) {
       .post-actions .btn-sm { padding: 0.25rem 0.5rem; font-size: 0.72rem; }
       .comment-form { flex-direction: column; }
       .comment-form .btn { align-self: flex-end; }
+      .post-images { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
 <body>
-  <div class="app">
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-title">分类</div>
+      <nav class="category-nav" id="category-nav" aria-label="博客分类"></nav>
+    </aside>
+
+    <div class="app">
     <header class="header">
       <div class="logo">
         <span class="logo-icon">☀️</span>
@@ -509,6 +750,12 @@
 
     <section class="compose" id="compose-section">
       <textarea id="compose-input" placeholder="分享此刻的想法，像夏日微风一样轻松…" maxlength="500"></textarea>
+      <div class="compose-toolbar">
+        <button class="btn-image" id="btn-add-image" type="button" disabled>📷 添加图片</button>
+        <span class="compose-category-hint">发布到 <strong id="compose-category-label">日常微博</strong></span>
+        <input type="file" id="image-input" accept="image/jpeg,image/png,image/gif,image/webp" multiple hidden>
+      </div>
+      <div class="compose-images" id="compose-images"></div>
       <div class="compose-footer">
         <span class="char-count"><span id="char-count">0</span>/500</span>
         <button class="btn btn-primary" id="btn-post" type="button" disabled>发布</button>
@@ -517,7 +764,7 @@
 
     <section>
       <div class="feed-header">
-        <span class="feed-title">动态</span>
+        <span class="feed-title" id="feed-title">日常微博</span>
         <span class="feed-count" id="feed-count"></span>
       </div>
       <div id="feed"></div>
@@ -526,6 +773,11 @@
         <p class="hint" id="load-hint"></p>
       </div>
     </section>
+    </div>
+  </div>
+
+  <div class="image-lightbox" id="image-lightbox" hidden>
+    <img id="lightbox-img" src="" alt="">
   </div>
 
   <!-- Settings modal -->
@@ -551,21 +803,32 @@
       repo: 'zilouju.github.io',
       recentFile: 'data/posts-recent.json',
       archiveFile: 'data/posts-archive.json',
-      recentLimit: 20,       // recent 文件最多保留条数
-      pageSize: 8,           // 首页每页展示条数
-      archiveChunk: 10,      // 历史每次加载条数
+      recentLimit: 20,
+      pageSize: 8,
+      archiveChunk: 10,
       tokenKey: 'weibo_github_token',
       draftKey: 'weibo_compose_draft',
+      categoryKey: 'weibo_active_category',
+      defaultCategory: 'daily',
+      maxImages: 4,
+      maxImageSize: 2 * 1024 * 1024,
+      categories: [
+        { id: 'daily', label: '日常微博', icon: '📝' },
+        { id: 'blog', label: '博客文章', icon: '📖' },
+        { id: 'note', label: '学习笔记', icon: '💡' },
+        { id: 'photo', label: '相册图集', icon: '📷' },
+      ],
     };
 
     /* ── State ── */
     const state = {
       recent: [],
-      archive: null,         // null = 未加载
-      fileMeta: {},          // path → { sha }
-      displayed: [],         // 当前已展示的帖子
-      recentShown: 0,
-      archiveShown: 0,
+      archive: null,
+      fileMeta: {},
+      displayed: [],
+      categoryShown: 0,
+      activeCategory: localStorage.getItem(CONFIG.categoryKey) || CONFIG.defaultCategory,
+      pendingImages: [],
       expandedComments: new Set(),
       editingPost: null,
       editingComment: null,
@@ -587,8 +850,33 @@
     const operationProgressLabel = $('operation-progress-label');
     const operationProgressPercent = $('operation-progress-percent');
     const operationProgressBar = $('operation-progress-bar');
+    const categoryNav = $('category-nav');
+    const composeImages = $('compose-images');
+    const imageInput = $('image-input');
+    const imageLightbox = $('image-lightbox');
+    const lightboxImg = $('lightbox-img');
 
     /* ── Utils ── */
+    function getCategoryMeta(id) {
+      return CONFIG.categories.find((c) => c.id === id)
+        || CONFIG.categories.find((c) => c.id === CONFIG.defaultCategory);
+    }
+
+    function getPostCategory(post) {
+      return post.category || CONFIG.defaultCategory;
+    }
+
+    function getAvailablePosts() {
+      return sortPosts([...state.recent, ...(state.archive || [])]);
+    }
+
+    function getFilteredPosts() {
+      return getAvailablePosts().filter((p) => getPostCategory(p) === state.activeCategory);
+    }
+
+    function countPostsByCategory(categoryId) {
+      return getAvailablePosts().filter((p) => getPostCategory(p) === categoryId).length;
+    }
     function uid(prefix) {
       return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
     }
@@ -696,7 +984,9 @@
     function normalizePosts(posts) {
       return posts.map((p) => ({
         ...p,
-        content: fixMojibake(p.content),
+        category: p.category || CONFIG.defaultCategory,
+        content: fixMojibake(p.content || ''),
+        images: Array.isArray(p.images) ? p.images : [],
         comments: (p.comments || []).map((c) => ({
           ...c,
           content: fixMojibake(c.content),
@@ -714,11 +1004,124 @@
         statusText.textContent = '只读模式 · 点击 ⚙️ 配置 Token 后可发帖';
         composeInput.disabled = false;
       }
+      updateComposeState();
     }
 
     function updateComposeState() {
       $('char-count').textContent = composeInput.value.length;
-      btnPost.disabled = !composeInput.value.trim() || state.loading || state.operationActive;
+      const hasContent = composeInput.value.trim() || state.pendingImages.length > 0;
+      const busy = state.loading || state.operationActive;
+      btnPost.disabled = !hasContent || busy;
+      $('btn-add-image').disabled = busy || !canWrite()
+        || state.pendingImages.length >= CONFIG.maxImages;
+    }
+
+    function updateComposeCategoryLabel() {
+      const meta = getCategoryMeta(state.activeCategory);
+      $('compose-category-label').textContent = meta?.label || '日常微博';
+      $('feed-title').textContent = meta?.label || '日常微博';
+    }
+
+    function renderCategoryNav() {
+      categoryNav.innerHTML = CONFIG.categories.map((cat) => {
+        const count = countPostsByCategory(cat.id);
+        const active = state.activeCategory === cat.id ? ' active' : '';
+        return `
+          <button class="category-btn${active}" type="button" data-category="${cat.id}">
+            <span class="category-label">
+              <span class="category-icon">${cat.icon}</span>
+              <span>${cat.label}</span>
+            </span>
+            <span class="category-count">${count}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function setActiveCategory(categoryId) {
+      if (!getCategoryMeta(categoryId)) return;
+      state.activeCategory = categoryId;
+      localStorage.setItem(CONFIG.categoryKey, categoryId);
+      state.displayed = [];
+      state.categoryShown = 0;
+      state.expandedComments.clear();
+      updateComposeCategoryLabel();
+      renderCategoryNav();
+      renderNextPage();
+    }
+
+    function revokePendingImageUrls() {
+      state.pendingImages.forEach((item) => {
+        if (item.previewUrl) URL.revokeObjectURL(item.previewUrl);
+      });
+    }
+
+    function clearPendingImages() {
+      revokePendingImageUrls();
+      state.pendingImages = [];
+      composeImages.innerHTML = '';
+      imageInput.value = '';
+      updateComposeState();
+    }
+
+    function renderPendingImages() {
+      composeImages.innerHTML = state.pendingImages.map((item, index) => `
+        <div class="compose-image-item">
+          <img src="${item.previewUrl}" alt="待发布图片">
+          <button class="compose-image-remove" type="button" data-remove-image="${index}" aria-label="移除图片">×</button>
+        </div>
+      `).join('');
+    }
+
+    function addPendingImages(files) {
+      const remain = CONFIG.maxImages - state.pendingImages.length;
+      if (remain <= 0) {
+        toast(`最多添加 ${CONFIG.maxImages} 张图片`);
+        return;
+      }
+      for (const file of Array.from(files).slice(0, remain)) {
+        if (!file.type.startsWith('image/')) {
+          toast('仅支持图片文件');
+          continue;
+        }
+        if (file.size > CONFIG.maxImageSize) {
+          toast('单张图片不能超过 2MB');
+          continue;
+        }
+        state.pendingImages.push({
+          file,
+          previewUrl: URL.createObjectURL(file),
+        });
+      }
+      renderPendingImages();
+      updateComposeState();
+    }
+
+    function openLightbox(src) {
+      lightboxImg.src = src;
+      imageLightbox.hidden = false;
+      requestAnimationFrame(() => imageLightbox.classList.add('open'));
+    }
+
+    function closeLightbox() {
+      imageLightbox.classList.remove('open');
+      setTimeout(() => {
+        imageLightbox.hidden = true;
+        lightboxImg.src = '';
+      }, 220);
+    }
+
+    function renderPostImages(images) {
+      if (!images?.length) return '';
+      return `
+        <div class="post-images">
+          ${images.map((src) => `
+            <a class="post-image" href="${escapeHtml(src)}" data-lightbox="${escapeHtml(src)}">
+              <img src="${escapeHtml(src)}" alt="配图" loading="lazy">
+            </a>
+          `).join('')}
+        </div>
+      `;
     }
 
     function saveComposeDraft() {
@@ -863,6 +1266,74 @@
       throw new Error(lastError);
     }
 
+    async function putBinaryFile(path, base64Content, message) {
+      const token = getToken();
+      if (!token) throw new Error('请先配置 GitHub Token');
+
+      let lastError = '图片上传失败';
+      for (let attempt = 0; attempt < 3; attempt++) {
+        if (!state.fileMeta[path]?.sha) await prefetchFileSha(path);
+
+        const body = {
+          message: message || `weibo: upload ${path}`,
+          content: base64Content,
+        };
+        if (state.fileMeta[path]?.sha) body.sha = state.fileMeta[path].sha;
+
+        const res = await fetch(
+          `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/${path}`,
+          {
+            method: 'PUT',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+              Accept: 'application/vnd.github+json',
+            },
+            body: JSON.stringify(body),
+          }
+        );
+
+        if (res.ok) {
+          const data = await res.json();
+          state.fileMeta[path] = { sha: data.content.sha };
+          return `./${path}`;
+        }
+
+        const err = await res.json().catch(() => ({}));
+        lastError = err.message || `图片上传失败 (${res.status})`;
+        if (!isShaConflict(lastError, res.status) || attempt === 2) throw new Error(lastError);
+        delete state.fileMeta[path];
+        await new Promise((r) => setTimeout(r, 400 * (attempt + 1)));
+      }
+      throw new Error(lastError);
+    }
+
+    async function fileToBase64(file) {
+      const buffer = await file.arrayBuffer();
+      const bytes = new Uint8Array(buffer);
+      let binary = '';
+      for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+      return btoa(binary);
+    }
+
+    function imageExtension(file) {
+      const map = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/gif': 'gif', 'image/webp': 'webp' };
+      return map[file.type] || (file.name.split('.').pop() || 'jpg').toLowerCase();
+    }
+
+    async function uploadImages(files, postId) {
+      const paths = [];
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const ext = imageExtension(file);
+        const path = `assets/images/${postId}_${i}.${ext}`;
+        const base64 = await fileToBase64(file);
+        const url = await putBinaryFile(path, base64, `weibo: add image ${path}`);
+        paths.push(url.replace(/^\.\//, ''));
+      }
+      return paths;
+    }
+
     function sortPosts(posts) {
       return [...posts].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     }
@@ -905,12 +1376,15 @@
       statusText.textContent = '正在加载最新动态…';
       try {
         await loadRecent();
-        state.recentShown = 0;
-        state.archiveShown = 0;
+        if (!getCategoryMeta(state.activeCategory)) {
+          state.activeCategory = CONFIG.defaultCategory;
+        }
         state.displayed = [];
+        state.categoryShown = 0;
+        updateComposeCategoryLabel();
+        renderCategoryNav();
         renderNextPage();
         updateStatus();
-        updateFeedCount();
         restoreComposeDraft();
       } catch (e) {
         statusBar.className = 'status-bar error';
@@ -920,46 +1394,28 @@
     }
 
     /* ── Pagination ── */
-    function getTotalCount() {
-      const archiveLen = state.archive?.length ?? 0;
-      return state.recent.length + archiveLen;
-    }
-
     function renderNextPage() {
-      let added = 0;
-      const target = CONFIG.pageSize;
-
-      while (added < target && state.recentShown < state.recent.length) {
-        state.displayed.push(state.recent[state.recentShown++]);
-        added++;
-      }
-
-      if (added < target && state.archive) {
-        while (added < target && state.archiveShown < state.archive.length) {
-          state.displayed.push(state.archive[state.archiveShown++]);
-          added++;
-        }
-      }
-
+      const filtered = getFilteredPosts();
+      const toAdd = filtered.slice(state.categoryShown, state.categoryShown + CONFIG.pageSize);
+      state.displayed.push(...toAdd);
+      state.categoryShown += toAdd.length;
       renderFeed();
       updateLoadMoreUI();
       updateFeedCount();
+      renderCategoryNav();
     }
 
     function updateFeedCount() {
+      const filtered = getFilteredPosts();
       const shown = state.displayed.length;
-      const total = state.recent.length + (state.archive?.length ?? 0);
-      $('feed-count').textContent = total > 0 ? `已显示 ${shown} / ${total}` : '';
+      $('feed-count').textContent = filtered.length > 0 ? `已显示 ${shown} / ${filtered.length}` : '';
     }
 
     function updateLoadMoreUI() {
       const wrap = $('load-more-wrap');
-      const hasMoreRecent = state.recentShown < state.recent.length;
-      const hasArchive = state.recent.length >= CONFIG.recentLimit || (state.archive && state.archiveShown < state.archive.length);
-      const archiveNotLoaded = state.archive === null
-        && state.recentShown >= state.recent.length
-        && state.recent.length >= CONFIG.recentLimit;
-      const hasMoreArchive = state.archive && state.archiveShown < state.archive.length;
+      const filtered = getFilteredPosts();
+      const hasMoreInMemory = state.categoryShown < filtered.length;
+      const archiveNotLoaded = state.archive === null && state.recent.length >= CONFIG.recentLimit;
 
       if (state.archiveLoading) {
         wrap.hidden = false;
@@ -968,16 +1424,12 @@
         return;
       }
 
-      if (hasMoreRecent || hasMoreArchive || archiveNotLoaded) {
+      if (hasMoreInMemory || archiveNotLoaded) {
         wrap.hidden = false;
         $('btn-load-more').hidden = false;
-        if (archiveNotLoaded) {
-          $('load-hint').textContent = '历史记录较多，点击后将加载归档内容';
-        } else if (hasMoreArchive) {
-          $('load-hint').textContent = `历史归档 · 每次加载 ${CONFIG.archiveChunk} 条`;
-        } else {
-          $('load-hint').textContent = '';
-        }
+        $('load-hint').textContent = archiveNotLoaded && !hasMoreInMemory
+          ? '历史记录较多，点击后将加载归档内容'
+          : '';
       } else {
         wrap.hidden = state.displayed.length === 0;
         $('btn-load-more').hidden = true;
@@ -986,27 +1438,24 @@
     }
 
     async function handleLoadMore() {
-      const hasMoreRecent = state.recentShown < state.recent.length;
+      let filtered = getFilteredPosts();
 
-      if (hasMoreRecent) {
-        renderNextPage();
-        return;
-      }
-
-      if (state.archive === null) {
+      if (state.categoryShown < filtered.length) {
+        const toAdd = filtered.slice(state.categoryShown, state.categoryShown + CONFIG.pageSize);
+        state.displayed.push(...toAdd);
+        state.categoryShown += toAdd.length;
+      } else if (state.archive === null && state.recent.length >= CONFIG.recentLimit) {
         await loadArchive();
-        state.archiveShown = 0;
-      }
-
-      let added = 0;
-      while (added < CONFIG.archiveChunk && state.archiveShown < state.archive.length) {
-        state.displayed.push(state.archive[state.archiveShown++]);
-        added++;
+        filtered = getFilteredPosts();
+        const toAdd = filtered.slice(state.categoryShown, state.categoryShown + CONFIG.archiveChunk);
+        state.displayed.push(...toAdd);
+        state.categoryShown += toAdd.length;
       }
 
       renderFeed();
       updateLoadMoreUI();
       updateFeedCount();
+      renderCategoryNav();
     }
 
     /* ── Persist helpers ── */
@@ -1070,11 +1519,19 @@
     }
 
     /* ── CRUD: Posts ── */
-    async function createPost(content) {
+    async function createPost(content, imageFiles = []) {
       await withOperationProgress('正在发布到 GitHub…', '发布完成', async () => {
+        const postId = uid('post');
+        let images = [];
+        if (imageFiles.length > 0) {
+          setOperationProgress(28, '正在上传图片…');
+          images = await uploadImages(imageFiles, postId);
+        }
         const post = {
-          id: uid('post'),
+          id: postId,
+          category: state.activeCategory,
           content: content.trim(),
+          images,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           comments: [],
@@ -1082,7 +1539,9 @@
         const all = [post, ...(await getAllPostsForWrite())];
         const { recent, archive } = splitRecentArchive(all);
         await saveAll(recent, archive);
-        const displayCount = state.displayed.length + 1;
+        const displayCount = getPostCategory(post) === state.activeCategory
+          ? state.displayed.length + 1
+          : state.displayed.length;
         reloadViewFromState(displayCount);
       });
       toast('发布成功 ☀️');
@@ -1168,13 +1627,13 @@
     }
 
     function reloadViewFromState(count) {
-      const all = getAllPosts();
-      state.displayed = all.slice(0, count);
-      state.recentShown = Math.min(count, state.recent.length);
-      state.archiveShown = Math.max(0, count - state.recent.length);
+      const filtered = getFilteredPosts();
+      state.displayed = filtered.slice(0, count);
+      state.categoryShown = state.displayed.length;
       renderFeed();
       updateLoadMoreUI();
       updateFeedCount();
+      renderCategoryNav();
     }
 
     async function reloadAndKeepView() {
@@ -1196,13 +1655,19 @@
 
       const contentHtml = isEditing ? `
         <div class="post-content editing">
+          ${renderPostImages(post.images)}
           <textarea data-edit-post="${post.id}">${escapeHtml(post.content)}</textarea>
           <div class="edit-actions">
             <button class="btn btn-primary btn-sm" data-action="save-post" data-id="${post.id}" type="button">保存</button>
             <button class="btn btn-ghost btn-sm" data-action="cancel-edit" type="button">取消</button>
           </div>
         </div>
-      ` : `<div class="post-content">${escapeHtml(post.content)}</div>`;
+      ` : `${renderPostImages(post.images)}${post.content ? `<div class="post-content">${escapeHtml(post.content)}</div>` : ''}`;
+
+      const catMeta = getCategoryMeta(getPostCategory(post));
+      const categoryTag = catMeta
+        ? `<span class="post-category-tag">${catMeta.icon} ${catMeta.label}</span>`
+        : '';
 
       const commentsHtml = commentsOpen ? `
         <div class="comments-list">
@@ -1219,7 +1684,7 @@
       return `
         <article class="post-card" data-post="${post.id}">
           <div class="post-meta">
-            <span class="post-time">${formatTime(post.updatedAt || post.createdAt)}${post.updatedAt !== post.createdAt ? ' · 已编辑' : ''}</span>
+            <span class="post-time">${categoryTag}${formatTime(post.updatedAt || post.createdAt)}${post.updatedAt !== post.createdAt ? ' · 已编辑' : ''}</span>
             <div class="post-actions">${postActions}</div>
           </div>
           ${contentHtml}
@@ -1272,14 +1737,54 @@
 
     function renderFeed() {
       if (state.displayed.length === 0) {
-        feed.innerHTML = `<div class="empty-state"><div class="emoji">🌊</div><p>还没有动态，发第一条吧！</p></div>`;
+        const label = getCategoryMeta(state.activeCategory)?.label || '内容';
+        feed.innerHTML = `<div class="empty-state"><div class="emoji">🌊</div><p>「${label}」还没有内容，发第一条吧！</p></div>`;
         return;
       }
       feed.innerHTML = state.displayed.map(renderPostCard).join('');
     }
 
+    categoryNav.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-category]');
+      if (!btn || btn.dataset.category === state.activeCategory) return;
+      setActiveCategory(btn.dataset.category);
+    });
+
+    $('btn-add-image').addEventListener('click', () => {
+      if (!canWrite()) {
+        toast('请先配置 GitHub Token');
+        $('settings-modal').classList.add('open');
+        return;
+      }
+      imageInput.click();
+    });
+
+    imageInput.addEventListener('change', () => {
+      if (imageInput.files?.length) addPendingImages(imageInput.files);
+      imageInput.value = '';
+    });
+
+    composeImages.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-remove-image]');
+      if (!btn) return;
+      const index = Number(btn.dataset.removeImage);
+      const [removed] = state.pendingImages.splice(index, 1);
+      if (removed?.previewUrl) URL.revokeObjectURL(removed.previewUrl);
+      renderPendingImages();
+      updateComposeState();
+    });
+
+    imageLightbox.addEventListener('click', closeLightbox);
+
     /* ── Event delegation ── */
     feed.addEventListener('click', async (e) => {
+      const lightboxLink = e.target.closest('[data-lightbox]');
+      if (lightboxLink) {
+        e.preventDefault();
+        openLightbox(lightboxLink.dataset.lightbox);
+        return;
+      }
+
       const btn = e.target.closest('[data-action]');
       if (!btn) return;
 
@@ -1312,7 +1817,11 @@
           break;
         case 'save-post': {
           const textarea = feed.querySelector(`[data-edit-post="${postId}"]`);
-          if (!textarea?.value.trim()) { toast('内容不能为空'); return; }
+          const currentPost = findPost(postId);
+          if (!textarea?.value.trim() && !(currentPost?.images?.length)) {
+            toast('内容不能为空');
+            return;
+          }
           btn.disabled = true;
           state.editingPost = null;
           try { await updatePost(postId, textarea.value); }
@@ -1401,16 +1910,18 @@
         return;
       }
       const content = composeInput.value.trim();
-      if (!content) return;
+      const imageFiles = state.pendingImages.map((item) => item.file);
+      if (!content && imageFiles.length === 0) return;
 
       state.loading = true;
       btnPost.disabled = true;
       btnPost.textContent = '发布中…';
 
       try {
-        await createPost(content);
+        await createPost(content, imageFiles);
         composeInput.value = '';
         clearComposeDraft();
+        clearPendingImages();
         updateComposeState();
       } catch (err) {
         toast(err.message);
