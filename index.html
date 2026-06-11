@@ -55,20 +55,39 @@
     .layout {
       position: relative;
       z-index: 1;
-      display: flex;
-      gap: 1.5rem;
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 1.25rem 1rem 3rem;
-      align-items: flex-start;
+      min-height: 100vh;
     }
 
     .sidebar {
-      width: 168px;
-      flex-shrink: 0;
-      position: sticky;
-      top: 1rem;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 196px;
+      display: flex;
+      flex-direction: column;
+      padding: 1.35rem 0.85rem 1rem;
+      background: rgba(255, 252, 247, 0.92);
+      border-right: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+      box-shadow: 2px 0 16px rgba(255, 107, 74, 0.06);
+      overflow-y: auto;
+      z-index: 20;
     }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0 0.55rem 1.1rem;
+      margin-bottom: 0.35rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--coral);
+    }
+
+    .sidebar-brand .logo-icon { font-size: 1.45rem; }
 
     .sidebar-title {
       font-size: 0.72rem;
@@ -77,13 +96,22 @@
       text-transform: uppercase;
       color: var(--text-muted);
       margin-bottom: 0.65rem;
-      padding-left: 0.65rem;
+      padding: 0 0.55rem;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding-top: 1rem;
+      display: flex;
+      gap: 0.45rem;
+      justify-content: center;
     }
 
     .category-nav {
       display: flex;
       flex-direction: column;
       gap: 0.35rem;
+      flex: 1;
     }
 
     .category-btn {
@@ -138,28 +166,28 @@
       color: var(--coral);
     }
 
-    .app { position: relative; flex: 1; min-width: 0; max-width: 620px; }
+    .app {
+      position: relative;
+      margin-left: 196px;
+      max-width: 660px;
+      padding: 1.25rem 1.5rem 3rem;
+    }
 
     /* Header */
     .header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.5rem 0 1.25rem;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 1.35rem;
-      font-weight: 700;
-      color: var(--coral);
+      padding: 0 0 1rem;
     }
 
     .logo-icon { font-size: 1.5rem; }
 
-    .header-actions { display: flex; gap: 0.5rem; }
+    .page-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
 
     .icon-btn {
       width: 36px;
@@ -683,16 +711,37 @@
     }
 
     @media (max-width: 768px) {
-      .layout { flex-direction: column; gap: 1rem; }
-      .sidebar { width: 100%; position: static; }
-      .category-nav {
-        flex-direction: row;
-        overflow-x: auto;
-        padding-bottom: 0.25rem;
-        -webkit-overflow-scrolling: touch;
+      .sidebar {
+        width: 72px;
+        padding: 1rem 0.45rem;
       }
-      .category-btn { width: auto; flex-shrink: 0; white-space: nowrap; }
-      .sidebar-title { display: none; }
+
+      .sidebar-brand {
+        justify-content: center;
+        padding: 0 0 0.85rem;
+        font-size: 0;
+      }
+
+      .sidebar-brand .logo-icon { font-size: 1.6rem; }
+
+      .sidebar-title,
+      .category-label span:not(.category-icon),
+      .category-count { display: none; }
+
+      .category-btn {
+        justify-content: center;
+        padding: 0.55rem;
+      }
+
+      .category-icon { font-size: 1.15rem; }
+
+      .sidebar-footer { flex-direction: column; align-items: center; }
+
+      .app {
+        margin-left: 72px;
+        padding: 1rem 0.85rem 2.5rem;
+        max-width: none;
+      }
     }
 
     @media (max-width: 480px) {
@@ -706,17 +755,13 @@
 <body>
   <div class="layout">
     <aside class="sidebar">
-      <div class="sidebar-title">分类</div>
-      <nav class="category-nav" id="category-nav" aria-label="博客分类"></nav>
-    </aside>
-
-    <div class="app">
-    <header class="header">
-      <div class="logo">
+      <div class="sidebar-brand">
         <span class="logo-icon">☀️</span>
         <span>橘子楼</span>
       </div>
-      <div class="header-actions">
+      <div class="sidebar-title">分类</div>
+      <nav class="category-nav" id="category-nav" aria-label="博客分类"></nav>
+      <div class="sidebar-footer">
         <button class="icon-btn" id="btn-refresh" title="刷新" type="button">
           <svg class="icon-btn-svg" viewBox="0 0 24 24" aria-hidden="true">
             <path d="M4 12a8 8 0 0 1 13.5-5.8L19 8"/>
@@ -732,6 +777,11 @@
           </svg>
         </button>
       </div>
+    </aside>
+
+    <div class="app">
+    <header class="header">
+      <h1 class="page-title" id="feed-title">日常微博</h1>
     </header>
 
     <div class="status-bar readonly" id="status-bar">
@@ -764,7 +814,7 @@
 
     <section>
       <div class="feed-header">
-        <span class="feed-title" id="feed-title">日常微博</span>
+        <span class="feed-title">动态列表</span>
         <span class="feed-count" id="feed-count"></span>
       </div>
       <div id="feed"></div>
@@ -1018,8 +1068,9 @@
 
     function updateComposeCategoryLabel() {
       const meta = getCategoryMeta(state.activeCategory);
-      $('compose-category-label').textContent = meta?.label || '日常微博';
-      $('feed-title').textContent = meta?.label || '日常微博';
+      const label = meta?.label || '日常微博';
+      $('compose-category-label').textContent = label;
+      $('feed-title').textContent = label;
     }
 
     function renderCategoryNav() {
@@ -1027,7 +1078,7 @@
         const count = countPostsByCategory(cat.id);
         const active = state.activeCategory === cat.id ? ' active' : '';
         return `
-          <button class="category-btn${active}" type="button" data-category="${cat.id}">
+          <button class="category-btn${active}" type="button" data-category="${cat.id}" title="${cat.label}">
             <span class="category-label">
               <span class="category-icon">${cat.icon}</span>
               <span>${cat.label}</span>
