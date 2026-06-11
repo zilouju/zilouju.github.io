@@ -4,70 +4,90 @@
     "content": "一定要直观，一定要直观。\n1. 就是交付给上下游的数据，能够通过点击一下打开，不要通过解压再点击一下打开\n2. 异常一定需要进行标记。如果无法标记。",
     "createdAt": "2026-06-11T08:13:06.125Z",
     "updatedAt": "2026-06-11T08:13:06.125Z",
-    "comments": []
+    "comments": [],
+    "category": "daily",
+    "images": []
   },
   {
     "id": "post_1781164363710_apj2h",
     "content": "1. 架构必须在一开始都要保持非常好，否则后续变更，可能无法测试\n而测试的原因可能是模型因为没钱无法再调用了。\n你可以进行打桩测试，但是无法再进行端到端验证测试。",
     "createdAt": "2026-06-11T07:52:43.710Z",
     "updatedAt": "2026-06-11T07:53:04.628Z",
-    "comments": []
+    "comments": [],
+    "category": "daily",
+    "images": []
   },
   {
     "id": "post_1781098530757_elxsv",
-    "content": "1. 上面急，不要管，因为好几次急都出现问题。\n按照你自己的方式多次确认就好了。",
+    "content": "1. 上面急，你自己要把和评估内容，因为好几次急都出现问题。\n按照你自己的方式多次确认就好了。",
     "createdAt": "2026-06-10T13:35:30.757Z",
-    "updatedAt": "2026-06-10T13:35:30.757Z",
-    "comments": []
+    "updatedAt": "2026-06-11T09:55:01.539Z",
+    "comments": [],
+    "category": "daily",
+    "images": []
   },
   {
     "id": "post_1781074879715_m3vg2",
     "content": "工作就只是工作，不要额外的东西。\n情绪是最耗费能量的事情。\n低功耗，才能长久的运行。",
     "createdAt": "2026-06-10T07:01:19.715Z",
     "updatedAt": "2026-06-10T07:01:19.715Z",
-    "comments": []
+    "comments": [],
+    "category": "daily",
+    "images": []
   },
   {
     "id": "post_1781060459180_kiy19",
     "content": "1.非必要，不要增加表格字段，否则看到眼花撩乱。\n2. 如果一定要其他字段进行辅助，最后是可以分成多个sheet.\n3. 还是遵循同样的代码原则：高内聚。\n4. 没有必要，不要增加代码；增加的会增加理解成本。",
     "createdAt": "2026-06-10T03:00:59.180Z",
     "updatedAt": "2026-06-10T03:23:27.943Z",
-    "comments": []
+    "comments": [],
+    "category": "daily",
+    "images": []
   },
   {
     "id": "post_1781003561107_plr00",
     "content": "人们会对超出自己能力范围，短时间不可达到的目标和结果进行盲目崇拜。\n最后导致自己把别人当作神仙。",
     "createdAt": "2026-06-09T11:12:41.107Z",
     "updatedAt": "2026-06-09T11:12:41.107Z",
-    "comments": []
+    "comments": [],
+    "category": "daily",
+    "images": []
   },
   {
     "id": "post_1780972829984_iz7xq",
     "content": "1. 测试agent的工具集的时候，需要将所有的工具都测试一遍。否则会导致某些工具调用失败，而在实际的界面上没有反应。\n2. 适配新的模型的时候，并不是所有模型都遵循同一个prompt， 需要进行区分。",
     "createdAt": "2026-06-09T02:40:29.984Z",
     "updatedAt": "2026-06-09T08:11:03.826Z",
-    "comments": []
+    "comments": [],
+    "category": "daily",
+    "images": []
   },
   {
     "id": "post_1780892228220_7z2cp",
     "content": "安排的事情，还是都需要做完。\n否则，有时间对接的人一会儿忘记，一会儿又做不了。\n像psm节点的代码。",
     "createdAt": "2026-06-08T04:17:08.220Z",
     "updatedAt": "2026-06-08T04:17:08.220Z",
-    "comments": []
+    "comments": [],
+    "category": "daily",
+    "images": []
   },
   {
     "id": "post_1780796011204_vg5ek",
     "content": "1.实际上所有的工程问题，都是可以解决的。\n你只要锚定目标，往前走就行了。不要为了之前卡住的问题浪费一秒钟。\n通过绝对的理性判断。如果实在不行，就换算为钱。\n解决焦虑的方式就是将问题具体化",
     "createdAt": "2026-06-07T01:33:31.204Z",
     "updatedAt": "2026-06-07T01:33:31.204Z",
-    "comments": []
+    "comments": [],
+    "category": "daily",
+    "images": []
   },
   {
     "id": "post_1780717806587_diebb",
     "content": "通过github自建一个网站。",
     "createdAt": "2026-06-06T03:50:06.587Z",
     "updatedAt": "2026-06-06T03:57:03.054Z",
-    "comments": []
+    "comments": [],
+    "category": "daily",
+    "images": []
   },
   {
     "id": "post_1780716503962_byv74",
@@ -81,6 +101,8 @@
         "createdAt": "2026-06-06T03:37:44.739Z",
         "updatedAt": "2026-06-06T03:37:44.739Z"
       }
-    ]
+    ],
+    "category": "daily",
+    "images": []
   }
 ]
