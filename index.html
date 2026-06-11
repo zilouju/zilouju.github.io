@@ -27,7 +27,8 @@
       --radius: 14px;
       --shadow: 0 2px 12px rgba(255, 107, 74, 0.08);
       --shadow-hover: 0 6px 24px rgba(255, 107, 74, 0.14);
-      --sidebar-w: 200px;
+      --sidebar-w: 220px;
+      --content-w: 620px;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -57,18 +58,22 @@
       position: relative;
       z-index: 1;
       display: grid;
-      grid-template-columns: minmax(0, 1fr) var(--sidebar-w);
+      grid-template-columns:
+        1fr
+        min(var(--content-w), calc(100vw - var(--sidebar-w) - 2rem))
+        1fr
+        var(--sidebar-w);
       min-height: 100vh;
     }
 
     .main {
+      grid-column: 2;
       width: 100%;
-      max-width: 640px;
-      margin: 0 auto;
-      padding: 1.25rem 1.5rem 3rem;
+      padding: 1.25rem 0 3rem;
     }
 
     .sidebar {
+      grid-column: 4;
       position: sticky;
       top: 0;
       align-self: start;
@@ -76,9 +81,10 @@
       display: flex;
       flex-direction: column;
       padding: 1.35rem 1rem 1.25rem;
-      background: rgba(255, 252, 247, 0.9);
+      background: rgba(255, 252, 247, 0.92);
       border-left: 1px solid var(--border);
       backdrop-filter: blur(12px);
+      box-shadow: -4px 0 24px rgba(255, 107, 74, 0.05);
     }
 
     .sidebar-title {
@@ -700,18 +706,26 @@
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
       .layout {
         grid-template-columns: 1fr;
         grid-template-rows: auto 1fr;
       }
 
+      .main {
+        grid-column: 1;
+        grid-row: 2;
+        padding: 1rem 1rem 2.5rem;
+      }
+
       .sidebar {
+        grid-column: 1;
+        grid-row: 1;
         position: static;
         height: auto;
-        order: -1;
         border-left: none;
         border-bottom: 1px solid var(--border);
+        box-shadow: none;
         padding: 0.85rem 1rem 1rem;
       }
 
@@ -730,11 +744,6 @@
         width: auto;
         flex-shrink: 0;
         white-space: nowrap;
-      }
-
-      .main {
-        max-width: none;
-        padding: 1rem 1rem 2.5rem;
       }
     }
 
