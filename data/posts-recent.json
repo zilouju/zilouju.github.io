@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1782355347153_g2zyl",
+    "category": "daily",
+    "content": "还是需要做到问心无愧。\n这个是我的弱点。",
+    "images": [],
+    "createdAt": "2026-06-25T02:42:27.154Z",
+    "updatedAt": "2026-06-25T02:42:27.154Z",
+    "comments": []
+  },
+  {
     "id": "post_1782288230131_03hvp",
     "category": "daily",
     "content": "个人优势还是对于大型项目的走读和理解。\n现在这个优势是可以通过ai走读代码进行放大的。",
@@ -167,22 +176,6 @@
     "createdAt": "2026-06-06T03:50:06.587Z",
     "updatedAt": "2026-06-06T03:57:03.054Z",
     "comments": [],
-    "category": "daily",
-    "images": []
-  },
-  {
-    "id": "post_1780716503962_byv74",
-    "content": "这个是一条测试的微博",
-    "createdAt": "2026-06-06T03:28:23.962Z",
-    "updatedAt": "2026-06-06T03:36:14.617Z",
-    "comments": [
-      {
-        "id": "cmt_1780717064739_2hoko",
-        "content": "测试",
-        "createdAt": "2026-06-06T03:37:44.739Z",
-        "updatedAt": "2026-06-06T03:37:44.739Z"
-      }
-    ],
     "category": "daily",
     "images": []
   }
