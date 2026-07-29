@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1785316208355_xoayc",
+    "category": "note",
+    "content": "执行 失败 ，一定要明白为什么失败。再操作，而不是盲目的重来。",
+    "images": [],
+    "createdAt": "2026-07-29T09:10:08.355Z",
+    "updatedAt": "2026-07-29T09:10:08.355Z",
+    "comments": []
+  },
+  {
     "id": "post_1785289684080_wx5h2",
     "category": "note",
     "content": "好好吃饭 好好睡觉 天大的事情，那就明天再说",
@@ -168,15 +177,6 @@
     "images": [],
     "createdAt": "2026-07-19T02:15:53.080Z",
     "updatedAt": "2026-07-19T02:19:21.587Z",
-    "comments": []
-  },
-  {
-    "id": "post_1784364709384_2i1uw",
-    "category": "daily",
-    "content": "如果多并发的工作流代码，应该让模型按照代码流程说一下3个数据并发的逻辑流。",
-    "images": [],
-    "createdAt": "2026-07-18T08:51:49.384Z",
-    "updatedAt": "2026-07-18T08:51:49.384Z",
     "comments": []
   }
 ]
