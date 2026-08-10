@@ -2,10 +2,10 @@
   {
     "id": "post_1786344443363_ibhi2",
     "category": "daily",
-    "content": "通过git lfs clone 下载huggingface上面的数据，其实很慢，但是通过huggingface-cli下载却很快。如果你自己感觉下载很慢，可能是其他原因导致的。",
+    "content": "通过git lfs clone 下载huggingface上面的数据，其实很慢，但是通过huggingface-cli下载却很快。如果你自己感觉下载很慢，可能是其他原因导致的。\n你只需要等待，不要着急。程序会慢慢下载完毕的。",
     "images": [],
     "createdAt": "2026-08-10T06:47:23.363Z",
-    "updatedAt": "2026-08-10T06:47:23.363Z",
+    "updatedAt": "2026-08-10T08:41:56.208Z",
     "comments": []
   },
   {
