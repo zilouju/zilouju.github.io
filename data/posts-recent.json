@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1786332811123_ri89a",
+    "category": "daily",
+    "content": "ai出现之前，人们通过搜索引擎搜索内容，得到不确定性的答案。\nai出现之后，人们通过AI搜索内容，得到确定性的答案。\n所以为什么AI比较好， 因为AI靠谱。",
+    "images": [],
+    "createdAt": "2026-08-10T03:33:31.123Z",
+    "updatedAt": "2026-08-10T03:33:31.123Z",
+    "comments": []
+  },
+  {
     "id": "post_1785998269002_hutfr",
     "category": "note",
     "content": "RTSP/SIP协议区别是什么？\n如何写cuda算子。\n什么是yolo模型",
@@ -168,15 +177,6 @@
     "images": [],
     "createdAt": "2026-07-21T01:41:49.901Z",
     "updatedAt": "2026-07-21T01:41:49.901Z",
-    "comments": []
-  },
-  {
-    "id": "post_1784541697829_skr1f",
-    "category": "daily",
-    "content": "一定要将：一句话和一个想法 == 在AI时代实现； 作为本能反应。",
-    "images": [],
-    "createdAt": "2026-07-20T10:01:37.829Z",
-    "updatedAt": "2026-07-20T10:02:07.528Z",
     "comments": []
   }
 ]
