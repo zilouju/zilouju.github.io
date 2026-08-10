@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1786352549444_yqygp",
+    "category": "daily",
+    "content": "各种cli, 各种 mcp, 各种function_call 将所有的模型都链接起来了。",
+    "images": [],
+    "createdAt": "2026-08-10T09:02:29.444Z",
+    "updatedAt": "2026-08-10T09:02:29.444Z",
+    "comments": []
+  },
+  {
     "id": "post_1786344443363_ibhi2",
     "category": "daily",
     "content": "通过git lfs clone 下载huggingface上面的数据，其实很慢，但是通过huggingface-cli下载却很快。如果你自己感觉下载很慢，可能是其他原因导致的。\n你只需要等待，不要着急。程序会慢慢下载完毕的。",
@@ -168,15 +177,6 @@
     "images": [],
     "createdAt": "2026-07-21T07:42:18.271Z",
     "updatedAt": "2026-07-27T03:45:03.940Z",
-    "comments": []
-  },
-  {
-    "id": "post_1784611429619_7r6qz",
-    "category": "note",
-    "content": "其实每天可以搞懂一个问题就可以了。\n简单的事情，每天做。\n简单的事情，每天重复做就可以。\n难度也没有多少。\n\n怕的就是中途断了。\n所以，无论发生什么，都不要断。",
-    "images": [],
-    "createdAt": "2026-07-21T05:23:49.619Z",
-    "updatedAt": "2026-07-21T05:23:49.619Z",
     "comments": []
   }
 ]
