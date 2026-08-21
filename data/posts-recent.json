@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1787279951235_k1x30",
+    "category": "daily",
+    "content": "代码 生成结果 需要进行关键日志的记录和跟踪。\n比如ctest和ctest --test-dir 两个是天差地别的。\n手写代码将变的不可靠。",
+    "images": [],
+    "createdAt": "2026-08-21T02:39:11.235Z",
+    "updatedAt": "2026-08-21T02:39:11.235Z",
+    "comments": []
+  },
+  {
     "id": "post_1787193135622_tz5ny",
     "category": "daily",
     "content": "低了 也可以往高做。\n高了也可以往低做。",
@@ -168,15 +177,6 @@
     "images": [],
     "createdAt": "2026-07-27T02:22:09.154Z",
     "updatedAt": "2026-07-27T02:22:09.154Z",
-    "comments": []
-  },
-  {
-    "id": "post_1784941931374_5ptkw",
-    "category": "daily",
-    "content": "如果要调整自己架构，一定要 明确说明自己 需要 做旁路隔离。而不是模棱两可 的进行编码。否则会导致Ai在编码的时候出现问题。",
-    "images": [],
-    "createdAt": "2026-07-25T01:12:11.374Z",
-    "updatedAt": "2026-07-27T03:21:17.039Z",
     "comments": []
   }
 ]
