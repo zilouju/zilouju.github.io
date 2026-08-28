@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1787902931991_9n5c1",
+    "category": "daily",
+    "content": "好记性不如烂笔头。使用AI的时候，也需要将关键信息记录下来。可以提升效率。",
+    "images": [],
+    "createdAt": "2026-08-28T07:42:11.991Z",
+    "updatedAt": "2026-08-28T07:42:11.991Z",
+    "comments": []
+  },
+  {
     "id": "post_1787823314583_w6m3p",
     "category": "daily",
     "content": "ai不是让你每天重复的使用的。\n就像上大学一样。\n你需要再用的过程中，进化。\n而不是作为一个人，被AI用了4年。\n就像本来是上大学，结果被大学上了4年。",
@@ -168,15 +177,6 @@
     "images": [],
     "createdAt": "2026-08-06T06:37:49.002Z",
     "updatedAt": "2026-08-06T06:38:08.442Z",
-    "comments": []
-  },
-  {
-    "id": "post_1785997939763_ywtil",
-    "category": "note",
-    "content": "被套路了。",
-    "images": [],
-    "createdAt": "2026-08-06T06:32:19.763Z",
-    "updatedAt": "2026-08-06T06:32:19.763Z",
     "comments": []
   }
 ]
