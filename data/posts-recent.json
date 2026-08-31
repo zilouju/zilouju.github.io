@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1788170210315_dfc6v",
+    "category": "daily",
+    "content": "工程控制和AI使用不是一个相互冲突的事情。\n一定要第一想：AI是不是可以帮我做这个事情。",
+    "images": [],
+    "createdAt": "2026-08-31T09:56:50.315Z",
+    "updatedAt": "2026-08-31T09:56:50.315Z",
+    "comments": []
+  },
+  {
     "id": "post_1787902931991_9n5c1",
     "category": "daily",
     "content": "好记性不如烂笔头。使用AI的时候，也需要将关键信息记录下来。可以提升效率。",
@@ -168,15 +177,6 @@
     "images": [],
     "createdAt": "2026-08-10T03:33:31.123Z",
     "updatedAt": "2026-08-10T03:33:31.123Z",
-    "comments": []
-  },
-  {
-    "id": "post_1785998269002_hutfr",
-    "category": "note",
-    "content": "RTSP/SIP协议区别是什么？\n如何写cuda算子。\n什么是yolo模型",
-    "images": [],
-    "createdAt": "2026-08-06T06:37:49.002Z",
-    "updatedAt": "2026-08-06T06:38:08.442Z",
     "comments": []
   }
 ]
