@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1788228973246_59bds",
+    "category": "daily",
+    "content": "尽量主动一点\n无论是项目推进还是其实的情况。",
+    "images": [],
+    "createdAt": "2026-09-01T02:16:13.246Z",
+    "updatedAt": "2026-09-01T02:16:13.246Z",
+    "comments": []
+  },
+  {
     "id": "post_1788170210315_dfc6v",
     "category": "daily",
     "content": "工程控制和AI使用不是一个相互冲突的事情。\n一定要第一想：AI是不是可以帮我做这个事情。",
@@ -168,15 +177,6 @@
     "images": [],
     "createdAt": "2026-08-10T06:47:23.363Z",
     "updatedAt": "2026-08-10T08:41:56.208Z",
-    "comments": []
-  },
-  {
-    "id": "post_1786332811123_ri89a",
-    "category": "daily",
-    "content": "ai出现之前，人们通过搜索引擎搜索内容，得到不确定性的答案。\nai出现之后，人们通过AI搜索内容，得到确定性的答案。\n所以为什么AI比较好， 因为AI靠谱。",
-    "images": [],
-    "createdAt": "2026-08-10T03:33:31.123Z",
-    "updatedAt": "2026-08-10T03:33:31.123Z",
     "comments": []
   }
 ]
