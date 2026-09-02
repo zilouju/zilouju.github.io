@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1788362941392_py6re",
+    "category": "daily",
+    "content": "你是一个成年人，参与了，输了，要认。\n开始下一个而已。",
+    "images": [],
+    "createdAt": "2026-09-02T15:29:01.392Z",
+    "updatedAt": "2026-09-02T15:29:01.392Z",
+    "comments": []
+  },
+  {
     "id": "post_1788334195323_c46wz",
     "category": "daily",
     "content": "要有主观能动性，否则容易出现问题。如果你判断是对的。那就要自己马上去完成和做出来。",
@@ -168,15 +177,6 @@
     "images": [],
     "createdAt": "2026-08-18T03:23:07.056Z",
     "updatedAt": "2026-08-18T03:39:06.702Z",
-    "comments": []
-  },
-  {
-    "id": "post_1786412891893_2etiy",
-    "category": "daily",
-    "content": "pytho代码 无论是使用 任何代码，最好都是通过 env环境进行处理。",
-    "images": [],
-    "createdAt": "2026-08-11T01:48:11.893Z",
-    "updatedAt": "2026-08-11T01:48:11.893Z",
     "comments": []
   }
 ]
