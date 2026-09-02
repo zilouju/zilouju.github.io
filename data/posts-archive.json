@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1786352549444_yqygp",
+    "category": "daily",
+    "content": "各种cli, 各种 mcp, 各种function_call 将所有的模型都链接起来了。",
+    "images": [],
+    "createdAt": "2026-08-10T09:02:29.444Z",
+    "updatedAt": "2026-08-10T09:02:29.444Z",
+    "comments": []
+  },
+  {
     "id": "post_1786344443363_ibhi2",
     "category": "daily",
     "content": "通过git lfs clone 下载huggingface上面的数据，其实很慢，但是通过huggingface-cli下载却很快。如果你自己感觉下载很慢，可能是其他原因导致的。\n你只需要等待，不要着急。程序会慢慢下载完毕的。",
