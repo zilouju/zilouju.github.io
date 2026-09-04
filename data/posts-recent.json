@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1788512136952_he3s8",
+    "category": "daily",
+    "content": "数据一定要干净，环境一定要干净，做的时候一定要考虑清楚。",
+    "images": [],
+    "createdAt": "2026-09-04T08:55:36.952Z",
+    "updatedAt": "2026-09-04T08:55:36.952Z",
+    "comments": []
+  },
+  {
     "id": "post_1788404629956_fgnzk",
     "category": "daily",
     "content": "因为f(x)*g(x)进行 卷积的时候，是上下点乘的集合。",
@@ -168,15 +177,6 @@
     "images": [],
     "createdAt": "2026-08-20T02:32:15.622Z",
     "updatedAt": "2026-08-20T02:32:15.622Z",
-    "comments": []
-  },
-  {
-    "id": "post_1787187775977_4zl6v",
-    "category": "daily",
-    "content": "编程变的越来越重要，尤其是对代码的感知，否则你一不小心，就会让代码失控。\n唯一的办法的是你如何约束AI, 能够良好的控制Ai",
-    "images": [],
-    "createdAt": "2026-08-20T01:02:55.977Z",
-    "updatedAt": "2026-08-20T01:02:55.977Z",
     "comments": []
   }
 ]
