@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1789349699480_j8w1c",
+    "category": "daily",
+    "content": "行有不得者，反求诸己。\n不要做无谓的判断。",
+    "images": [],
+    "createdAt": "2026-09-14T01:34:59.480Z",
+    "updatedAt": "2026-09-14T01:34:59.480Z",
+    "comments": []
+  },
+  {
     "id": "post_1788512136952_he3s8",
     "category": "daily",
     "content": "数据一定要干净，环境一定要干净，做的时候一定要考虑清楚。",
@@ -168,15 +177,6 @@
     "images": [],
     "createdAt": "2026-08-21T02:39:11.235Z",
     "updatedAt": "2026-08-21T02:40:46.218Z",
-    "comments": []
-  },
-  {
-    "id": "post_1787193135622_tz5ny",
-    "category": "daily",
-    "content": "低了 也可以往高做。\n高了也可以往低做。",
-    "images": [],
-    "createdAt": "2026-08-20T02:32:15.622Z",
-    "updatedAt": "2026-08-20T02:32:15.622Z",
     "comments": []
   }
 ]
