@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1789430563947_30hi1",
+    "category": "daily",
+    "content": "vibe coding 编码方式：\n分析分类错误点，找到对应的代码点位，然后增加异常记录。\n判断这些异常是模型问题？还是代码逻辑不严谨。",
+    "images": [],
+    "createdAt": "2026-09-15T00:02:43.947Z",
+    "updatedAt": "2026-09-15T00:02:43.947Z",
+    "comments": []
+  },
+  {
     "id": "post_1789349699480_j8w1c",
     "category": "daily",
     "content": "行有不得者，反求诸己。\n不要责怪他人，不要太过要求别人。",
@@ -168,15 +177,6 @@
     "images": [],
     "createdAt": "2026-08-22T07:02:09.840Z",
     "updatedAt": "2026-08-22T07:02:09.840Z",
-    "comments": []
-  },
-  {
-    "id": "post_1787279951235_k1x30",
-    "category": "daily",
-    "content": "代码 生成结果 需要进行关键日志的记录和跟踪。\n比如ctest和ctest --test-dir 两个是天差地别的。\n手写代码将变的不可靠。\n\n不要试图的对抗AI.\n就像不要和汽车赛跑一样。",
-    "images": [],
-    "createdAt": "2026-08-21T02:39:11.235Z",
-    "updatedAt": "2026-08-21T02:40:46.218Z",
     "comments": []
   }
 ]
