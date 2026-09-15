@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1787382129840_utw7o",
+    "category": "daily",
+    "content": "当你通过mcp/skill 将工作流串通过以后，需要将其固化为skill,\n不要重复的造轮子。因为只要第一遍走通过以后，后续都是agent在这个上面的优化和更新。",
+    "images": [],
+    "createdAt": "2026-08-22T07:02:09.840Z",
+    "updatedAt": "2026-08-22T07:02:09.840Z",
+    "comments": []
+  },
+  {
     "id": "post_1787279951235_k1x30",
     "category": "daily",
     "content": "代码 生成结果 需要进行关键日志的记录和跟踪。\n比如ctest和ctest --test-dir 两个是天差地别的。\n手写代码将变的不可靠。\n\n不要试图的对抗AI.\n就像不要和汽车赛跑一样。",
