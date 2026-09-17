@@ -6,7 +6,14 @@
     "images": [],
     "createdAt": "2026-09-17T03:14:09.611Z",
     "updatedAt": "2026-09-17T03:14:09.611Z",
-    "comments": []
+    "comments": [
+      {
+        "id": "cmt_1789638886085_l2f0y",
+        "content": "先解决非agent问题或者agent可以通过few shot解决的问题。",
+        "createdAt": "2026-09-17T09:54:46.085Z",
+        "updatedAt": "2026-09-17T09:54:46.085Z"
+      }
+    ]
   },
   {
     "id": "post_1789432795905_vf0n3",
