@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1790398014527_udljy",
+    "category": "daily",
+    "content": "种种波折 皆有心造",
+    "images": [],
+    "createdAt": "2026-09-26T04:46:54.527Z",
+    "updatedAt": "2026-09-26T04:46:54.527Z",
+    "comments": []
+  },
+  {
     "id": "post_1790162183069_tard3",
     "category": "daily",
     "content": "如果别人说有什么问题，最好让别人举一个例子。而不是看AI的结果。",
@@ -175,15 +184,6 @@
     "images": [],
     "createdAt": "2026-08-27T08:06:47.377Z",
     "updatedAt": "2026-08-27T08:06:47.377Z",
-    "comments": []
-  },
-  {
-    "id": "post_1787562809255_6zurn",
-    "category": "daily",
-    "content": "任何涉及到钱的事情，都要留存证据。如果不能留存证据，容易扯皮。\n任何涉及到钱的时候，都要留存证据。",
-    "images": [],
-    "createdAt": "2026-08-24T09:13:29.255Z",
-    "updatedAt": "2026-08-24T11:56:01.879Z",
     "comments": []
   }
 ]
