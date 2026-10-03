@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1791039863073_zeh2k",
+    "category": "daily",
+    "content": "弱者抱怨过去，强者把过去踩在脚底。",
+    "images": [],
+    "createdAt": "2026-10-03T15:04:23.073Z",
+    "updatedAt": "2026-10-03T15:04:23.073Z",
+    "comments": []
+  },
+  {
     "id": "post_1790398014527_udljy",
     "category": "daily",
     "content": "种种波折 皆有心造",
@@ -175,15 +184,6 @@
     "images": [],
     "createdAt": "2026-08-27T09:31:40.414Z",
     "updatedAt": "2026-08-27T09:31:40.414Z",
-    "comments": []
-  },
-  {
-    "id": "post_1787818007377_fu897",
-    "category": "daily",
-    "content": "将cursor的skill 做成RAG 然后 后训练到模型中。是不是可以。比如微调27B",
-    "images": [],
-    "createdAt": "2026-08-27T08:06:47.377Z",
-    "updatedAt": "2026-08-27T08:06:47.377Z",
     "comments": []
   }
 ]
