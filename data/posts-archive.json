@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1787818007377_fu897",
+    "category": "daily",
+    "content": "将cursor的skill 做成RAG 然后 后训练到模型中。是不是可以。比如微调27B",
+    "images": [],
+    "createdAt": "2026-08-27T08:06:47.377Z",
+    "updatedAt": "2026-08-27T08:06:47.377Z",
+    "comments": []
+  },
+  {
     "id": "post_1787562809255_6zurn",
     "category": "daily",
     "content": "任何涉及到钱的事情，都要留存证据。如果不能留存证据，容易扯皮。\n任何涉及到钱的时候，都要留存证据。",
