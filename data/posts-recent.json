@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1791770469075_98ff7",
+    "category": "daily",
+    "content": "别人的礼貌 并不是尊重",
+    "images": [],
+    "createdAt": "2026-10-12T02:01:09.075Z",
+    "updatedAt": "2026-10-12T02:01:09.075Z",
+    "comments": []
+  },
+  {
     "id": "post_1791429814874_f1jgi",
     "category": "daily",
     "content": "agent最重要的是 分节点流水线，且每个结点都是可以单独运行的。\n可以只运行到这个节点。",
@@ -175,15 +184,6 @@
     "images": [],
     "createdAt": "2026-08-28T07:42:11.991Z",
     "updatedAt": "2026-08-28T07:42:11.991Z",
-    "comments": []
-  },
-  {
-    "id": "post_1787823314583_w6m3p",
-    "category": "daily",
-    "content": "ai不是让你每天重复的使用的。\n就像上大学一样。\n你需要再用的过程中，进化。\n而不是作为一个人，被AI用了4年。\n就像本来是上大学，结果被大学上了4年。",
-    "images": [],
-    "createdAt": "2026-08-27T09:35:14.583Z",
-    "updatedAt": "2026-08-27T09:35:14.583Z",
     "comments": []
   }
 ]
