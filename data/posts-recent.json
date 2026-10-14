@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1791944563384_tgdf7",
+    "category": "blog",
+    "content": "原来 --对比 一下就知道问题在哪里了。",
+    "images": [],
+    "createdAt": "2026-10-14T02:22:43.384Z",
+    "updatedAt": "2026-10-14T02:22:43.384Z",
+    "comments": []
+  },
+  {
     "id": "post_1791856510310_hrbcx",
     "category": "blog",
     "content": "如果有件事情 比较难以开始， 可以先拆分为小的的步骤，然后一个个处理。\n如果是心理抗拒，那没有办法，你只有说先预设失败。",
@@ -175,15 +184,6 @@
     "images": [],
     "createdAt": "2026-09-02T02:53:59.516Z",
     "updatedAt": "2026-09-02T02:54:55.592Z",
-    "comments": []
-  },
-  {
-    "id": "post_1788228973246_59bds",
-    "category": "daily",
-    "content": "尽量主动一点\n无论是项目推进还是其实的情况。",
-    "images": [],
-    "createdAt": "2026-09-01T02:16:13.246Z",
-    "updatedAt": "2026-09-01T02:16:13.246Z",
     "comments": []
   }
 ]
