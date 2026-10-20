@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1792460664315_9hpe4",
+    "category": "note",
+    "content": "允许一切发生，进展。",
+    "images": [],
+    "createdAt": "2026-10-20T01:44:24.315Z",
+    "updatedAt": "2026-10-20T01:44:24.315Z",
+    "comments": []
+  },
+  {
     "id": "post_1792116945677_poleb",
     "category": "note",
     "content": "数据库\n管理员是必要，用于区分普通用户和超级用户。\n所谓的超级用户是有删除/查询后台记录的用户。\n这个对于redis数据库的维护是必要的。\nredis数据一定要分权，要分职责。",
@@ -175,15 +184,6 @@
     "images": [],
     "createdAt": "2026-09-02T07:29:55.323Z",
     "updatedAt": "2026-09-02T07:39:36.292Z",
-    "comments": []
-  },
-  {
-    "id": "post_1788320423508_4yni5",
-    "category": "daily",
-    "content": "你的判断是准确的。要相信自己的第一判断",
-    "images": [],
-    "createdAt": "2026-09-02T03:40:23.508Z",
-    "updatedAt": "2026-09-02T03:40:23.508Z",
     "comments": []
   }
 ]
