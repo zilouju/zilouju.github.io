@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1792567892440_dv9b0",
+    "category": "daily",
+    "content": "不抱怨任何过去的人和事情，解决它们。",
+    "images": [],
+    "createdAt": "2026-10-21T07:31:32.440Z",
+    "updatedAt": "2026-10-21T07:31:32.440Z",
+    "comments": []
+  },
+  {
     "id": "post_1792460664315_9hpe4",
     "category": "note",
     "content": "允许一切发生，进展。",
@@ -175,15 +184,6 @@
     "images": [],
     "createdAt": "2026-09-02T15:29:01.392Z",
     "updatedAt": "2026-09-02T15:29:01.392Z",
-    "comments": []
-  },
-  {
-    "id": "post_1788334195323_c46wz",
-    "category": "daily",
-    "content": "要有主观能动性，否则容易出现问题。如果你判断是对的。那就要自己马上去完成和做出来。",
-    "images": [],
-    "createdAt": "2026-09-02T07:29:55.323Z",
-    "updatedAt": "2026-09-02T07:39:36.292Z",
     "comments": []
   }
 ]
