@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1792632674166_gkzwg",
+    "category": "daily",
+    "content": "什么学历啊 都不重要了。其实学历带来的优势只有几年。现在有AI，估计只有几个月。",
+    "images": [],
+    "createdAt": "2026-10-22T01:31:14.166Z",
+    "updatedAt": "2026-10-22T01:31:14.166Z",
+    "comments": []
+  },
+  {
     "id": "post_1792567892440_dv9b0",
     "category": "daily",
     "content": "不抱怨任何过去的人和事情，解决它们。",
@@ -175,15 +184,6 @@
     "images": [],
     "createdAt": "2026-09-03T00:14:05.147Z",
     "updatedAt": "2026-09-03T00:14:05.147Z",
-    "comments": []
-  },
-  {
-    "id": "post_1788362941392_py6re",
-    "category": "daily",
-    "content": "你是一个成年人，参与了，输了，要认。\n开始下一个而已。",
-    "images": [],
-    "createdAt": "2026-09-02T15:29:01.392Z",
-    "updatedAt": "2026-09-02T15:29:01.392Z",
     "comments": []
   }
 ]
