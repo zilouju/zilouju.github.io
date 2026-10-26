@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1788404629956_fgnzk",
+    "category": "daily",
+    "content": "因为f(x)*g(x)进行 卷积的时候，是上下点乘的集合。",
+    "images": [],
+    "createdAt": "2026-09-03T03:03:49.956Z",
+    "updatedAt": "2026-09-03T03:03:49.956Z",
+    "comments": []
+  },
+  {
     "id": "post_1788394445147_q8z2k",
     "category": "daily",
     "content": "如果Ai的知识不进行内化，最后的结果就是：自己无法进行举一反三。\n比如参数：-t 通常是target；但是AI后面写多了，估计知道-t的含义，但是你自己不知道。",
