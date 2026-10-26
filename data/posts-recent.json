@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1793057918100_w9r29",
+    "category": "daily",
+    "content": "不要为过去的失败 羞愧，那是来时的路。",
+    "images": [],
+    "createdAt": "2026-10-26T23:38:38.100Z",
+    "updatedAt": "2026-10-26T23:38:38.100Z",
+    "comments": []
+  },
+  {
     "id": "post_1792632674166_gkzwg",
     "category": "daily",
     "content": "什么学历啊 都不重要了。其实学历带来的优势只有几年。现在有AI，估计只有几个月。",
@@ -175,15 +184,6 @@
     "images": [],
     "createdAt": "2026-09-03T03:03:49.956Z",
     "updatedAt": "2026-09-03T03:03:49.956Z",
-    "comments": []
-  },
-  {
-    "id": "post_1788394445147_q8z2k",
-    "category": "daily",
-    "content": "如果Ai的知识不进行内化，最后的结果就是：自己无法进行举一反三。\n比如参数：-t 通常是target；但是AI后面写多了，估计知道-t的含义，但是你自己不知道。",
-    "images": [],
-    "createdAt": "2026-09-03T00:14:05.147Z",
-    "updatedAt": "2026-09-03T00:14:05.147Z",
     "comments": []
   }
 ]
