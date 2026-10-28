@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1793153939764_ty9kl",
+    "category": "daily",
+    "content": "无论当前如何，向好的方向走，向前走。",
+    "images": [],
+    "createdAt": "2026-10-28T02:18:59.764Z",
+    "updatedAt": "2026-10-28T02:18:59.764Z",
+    "comments": []
+  },
+  {
     "id": "post_1793153623826_0xllw",
     "category": "daily",
     "content": "自己需要打开某个网址，需要提前想一下：我为什么需要打开这个网址。",
@@ -175,15 +184,6 @@
     "images": [],
     "createdAt": "2026-09-15T00:02:43.947Z",
     "updatedAt": "2026-09-15T00:02:43.947Z",
-    "comments": []
-  },
-  {
-    "id": "post_1789349699480_j8w1c",
-    "category": "daily",
-    "content": "行有不得者，反求诸己。\n不要责怪他人，不要太过要求别人。",
-    "images": [],
-    "createdAt": "2026-09-14T01:34:59.480Z",
-    "updatedAt": "2026-09-14T01:35:21.566Z",
     "comments": []
   }
 ]
