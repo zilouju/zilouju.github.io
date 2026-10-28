@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1788512136952_he3s8",
+    "category": "daily",
+    "content": "数据一定要干净，环境一定要干净，做的时候一定要考虑清楚。",
+    "images": [],
+    "createdAt": "2026-09-04T08:55:36.952Z",
+    "updatedAt": "2026-09-04T08:56:36.329Z",
+    "comments": []
+  },
+  {
     "id": "post_1788404629956_fgnzk",
     "category": "daily",
     "content": "因为f(x)*g(x)进行 卷积的时候，是上下点乘的集合。",
