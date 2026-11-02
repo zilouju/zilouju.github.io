@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1793587657898_zhev7",
+    "category": "blog",
+    "content": "笑话一则：\n模型限流的时候，就是我休息的时刻。",
+    "images": [],
+    "createdAt": "2026-11-02T02:47:37.898Z",
+    "updatedAt": "2026-11-02T02:47:37.898Z",
+    "comments": []
+  },
+  {
     "id": "post_1793587434652_qo46x",
     "category": "blog",
     "content": "即使AI写的比你厉害，你还是需要写代码。\n因为即使起重机能够抬起巨大的重量的问题，你也需要健身锻炼身体。",
@@ -168,15 +177,6 @@
     "images": [],
     "createdAt": "2026-09-26T04:46:54.527Z",
     "updatedAt": "2026-09-26T04:46:54.527Z",
-    "comments": []
-  },
-  {
-    "id": "post_1790162183069_tard3",
-    "category": "daily",
-    "content": "如果别人说有什么问题，最好让别人举一个例子。而不是看AI的结果。",
-    "images": [],
-    "createdAt": "2026-09-23T11:16:23.069Z",
-    "updatedAt": "2026-09-23T11:16:23.069Z",
     "comments": []
   }
 ]
