@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1793931016483_3ervo",
+    "category": "blog",
+    "content": "优秀的主管：秦始皇：李信灭楚，失败。马上驱车去见王翦，承认自己错误，请王翦挂帅。",
+    "images": [],
+    "createdAt": "2026-11-06T02:10:16.483Z",
+    "updatedAt": "2026-11-06T02:10:16.483Z",
+    "comments": []
+  },
+  {
     "id": "post_1793852146655_l9c0h",
     "category": "blog",
     "content": "我觉得 练习leetcode题目变得越来越重要。是的，当前的AI调度能力上限是人的逻辑能力上限。",
@@ -168,15 +177,6 @@
     "images": [],
     "createdAt": "2026-10-08T03:23:34.874Z",
     "updatedAt": "2026-10-08T03:23:34.874Z",
-    "comments": []
-  },
-  {
-    "id": "post_1791039863073_zeh2k",
-    "category": "daily",
-    "content": "弱者抱怨过去，强者把过去踩在脚底。",
-    "images": [],
-    "createdAt": "2026-10-03T15:04:23.073Z",
-    "updatedAt": "2026-10-03T15:04:23.073Z",
     "comments": []
   }
 ]
