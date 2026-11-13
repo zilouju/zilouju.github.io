@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1794528300528_afzzf",
+    "category": "daily",
+    "content": "担当大事，全在明强二字\n辨别是非是明。\n自胜谓之强。",
+    "images": [],
+    "createdAt": "2026-11-13T00:05:00.528Z",
+    "updatedAt": "2026-11-13T00:05:00.528Z",
+    "comments": []
+  },
+  {
     "id": "post_1794467607948_5tf9m",
     "category": "daily",
     "content": "codex 确实体验是最好的。",
@@ -168,15 +177,6 @@
     "images": [],
     "createdAt": "2026-10-28T02:18:59.764Z",
     "updatedAt": "2026-10-28T02:18:59.764Z",
-    "comments": []
-  },
-  {
-    "id": "post_1793153623826_0xllw",
-    "category": "daily",
-    "content": "自己需要打开某个网址，需要提前想一下：我为什么需要打开这个网址。",
-    "images": [],
-    "createdAt": "2026-10-28T02:13:43.826Z",
-    "updatedAt": "2026-10-28T02:13:43.826Z",
     "comments": []
   }
 ]
