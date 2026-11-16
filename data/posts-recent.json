@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1794799642371_69kry",
+    "category": "daily",
+    "content": "腾讯在招人了。\n腾讯和deepseek有投资协议。\ndeepseek和华为有深度绑定。\n卧槽，这里有点东西。",
+    "images": [],
+    "createdAt": "2026-11-16T03:27:22.371Z",
+    "updatedAt": "2026-11-16T03:27:22.371Z",
+    "comments": []
+  },
+  {
     "id": "post_1794528300528_afzzf",
     "category": "daily",
     "content": "担当大事，全在明强二字\n辨别是非是明。\n自胜谓之强。",
@@ -168,15 +177,6 @@
     "images": [],
     "createdAt": "2026-10-30T01:51:29.075Z",
     "updatedAt": "2026-10-30T01:51:29.075Z",
-    "comments": []
-  },
-  {
-    "id": "post_1793153939764_ty9kl",
-    "category": "daily",
-    "content": "无论当前如何，向好的方向走，向前走。",
-    "images": [],
-    "createdAt": "2026-10-28T02:18:59.764Z",
-    "updatedAt": "2026-10-28T02:18:59.764Z",
     "comments": []
   }
 ]
