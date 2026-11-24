@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1795491090767_jwdza",
+    "category": "daily",
+    "content": "弱者道之用。反者道之动。",
+    "images": [],
+    "createdAt": "2026-11-24T03:31:30.767Z",
+    "updatedAt": "2026-11-24T03:31:30.767Z",
+    "comments": []
+  },
+  {
     "id": "post_1795401873517_yeadx",
     "category": "daily",
     "content": "悟已往之不谏，知来者之可追.\n往前走",
@@ -175,15 +184,6 @@
     "images": [],
     "createdAt": "2026-11-05T04:15:46.655Z",
     "updatedAt": "2026-11-05T08:14:21.303Z",
-    "comments": []
-  },
-  {
-    "id": "post_1793587657898_zhev7",
-    "category": "blog",
-    "content": "笑话一则：\n模型限流的时候，就是我休息的时刻。",
-    "images": [],
-    "createdAt": "2026-11-02T02:47:37.898Z",
-    "updatedAt": "2026-11-02T02:47:37.898Z",
     "comments": []
   }
 ]
