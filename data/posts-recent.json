@@ -1,5 +1,14 @@
 [
   {
+    "id": "post_1795491400715_917ih",
+    "category": "daily",
+    "content": "反者道之动。\n往不谏，来可追。\n柳暗花明又一村。",
+    "images": [],
+    "createdAt": "2026-11-24T03:36:40.715Z",
+    "updatedAt": "2026-11-24T03:36:40.715Z",
+    "comments": []
+  },
+  {
     "id": "post_1795491090767_jwdza",
     "category": "daily",
     "content": "弱者道之用。反者道之动。",
@@ -175,15 +184,6 @@
     "images": [],
     "createdAt": "2026-11-06T02:10:16.483Z",
     "updatedAt": "2026-11-06T02:10:16.483Z",
-    "comments": []
-  },
-  {
-    "id": "post_1793852146655_l9c0h",
-    "category": "blog",
-    "content": "我觉得 练习leetcode题目变得越来越重要。是的，当前的AI调度能力上限是人的逻辑能力上限。",
-    "images": [],
-    "createdAt": "2026-11-05T04:15:46.655Z",
-    "updatedAt": "2026-11-05T08:14:21.303Z",
     "comments": []
   }
 ]
